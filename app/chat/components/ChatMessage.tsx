@@ -1,6 +1,7 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
+import { ChatMessage as ChatMessageType } from '@/types/portfolio';
 
 export interface ChatMessageProps {
   message: string;
