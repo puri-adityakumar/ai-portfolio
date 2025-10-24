@@ -1,14 +1,115 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { getPortfolioData } from "@/lib/data";
 import { ExperienceItem, ProjectItem, Achievement, EducationItem } from "@/types/portfolio";
 import PortfolioNavigation from "./components/PortfolioNavigation";
 import CVDownload from "./components/CVDownload";
 
+const portfolioData = getPortfolioData();
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localhost:3000';
+
+export const metadata: Metadata = {
+  title: `Portfolio - ${portfolioData.profile.name}`,
+  description: `Explore ${portfolioData.profile.name}'s professional portfolio featuring ${portfolioData.experiences.length} work experiences, ${portfolioData.projects.length} projects, and expertise in ${portfolioData.skills.languages.join(', ')}.`,
+  keywords: [
+    'portfolio',
+    'professional experience',
+    'projects',
+    'skills',
+    portfolioData.profile.name,
+    portfolioData.profile.title,
+    ...portfolioData.skills.languages,
+    ...portfolioData.skills.frameworks,
+  ].join(", "),
+  openGraph: {
+    title: `Portfolio - ${portfolioData.profile.name}`,
+    description: `Explore ${portfolioData.profile.name}'s professional portfolio featuring work experience, projects, and technical expertise.`,
+    url: `${siteUrl}/portfolio`,
+    type: 'profile',
+    images: [
+      {
+        url: '/og-portfolio.jpg',
+        width: 1200,
+        height: 630,
+        alt: `${portfolioData.profile.name}'s Professional Portfolio`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Portfolio - ${portfolioData.profile.name}`,
+    description: `Explore ${portfolioData.profile.name}'s professional portfolio featuring work experience, projects, and technical expertise.`,
+    images: ['/og-portfolio.jpg'],
+  },
+  alternates: {
+    canonical: `${siteUrl}/portfolio`,
+  },
+};
+
 export default function Portfolio() {
   const portfolioData = getPortfolioData();
 
+  // Structured data for portfolio page
+  const portfolioStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": portfolioData.profile.name,
+      "jobTitle": portfolioData.profile.title,
+      "description": portfolioData.profile.bio,
+      "url": `${siteUrl}/portfolio`,
+      "email": portfolioData.profile.email,
+      "telephone": portfolioData.profile.phone,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": portfolioData.profile.location.split(',')[0],
+        "addressRegion": portfolioData.profile.location.split(',')[1]?.trim(),
+        "addressCountry": portfolioData.profile.location.split(',')[2]?.trim() || "India"
+      },
+      "sameAs": [
+        portfolioData.profile.githubUrl,
+        portfolioData.profile.linkedinUrl,
+      ].filter(Boolean),
+      "hasOccupation": portfolioData.experiences.map(exp => ({
+        "@type": "Occupation",
+        "name": exp.role,
+        "occupationLocation": {
+          "@type": "Place",
+          "name": exp.location
+        },
+        "estimatedSalary": {
+          "@type": "MonetaryAmountDistribution",
+          "name": "Competitive"
+        }
+      })),
+      "knowsAbout": [
+        ...portfolioData.skills.languages,
+        ...portfolioData.skills.frameworks,
+        ...portfolioData.skills.devops,
+        ...portfolioData.skills.tools,
+      ],
+      "award": portfolioData.achievements.map(achievement => achievement.title),
+      "alumniOf": portfolioData.education.map(edu => ({
+        "@type": "EducationalOrganization",
+        "name": edu.institution,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": edu.location
+        }
+      }))
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(portfolioStructuredData),
+        }}
+      />
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Professional Header */}
       <header className="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
         <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
@@ -389,6 +490,7 @@ export default function Portfolio() {
 
       {/* Portfolio Navigation */}
       <PortfolioNavigation />
-    </div>
+      </div>
+    </>
   );
 }
