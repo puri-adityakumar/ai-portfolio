@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface NavigationItem {
   id: string;
@@ -63,70 +63,114 @@ export default function PortfolioNavigation() {
   const [activeSection, setActiveSection] = useState<string>('experience');
   const [isVisible, setIsVisible] = useState(false);
 
+  // Throttle scroll events for better performance
+  const throttle = useCallback((func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    let lastExecTime = 0;
+    return function (...args: any[]) {
+      const currentTime = Date.now();
+      
+      if (currentTime - lastExecTime > delay) {
+        func(...args);
+        lastExecTime = currentTime;
+      } else {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          func(...args);
+          lastExecTime = Date.now();
+        }, delay - (currentTime - lastExecTime));
+      }
+    };
+  }, []);
+
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       // Show navigation after scrolling past header
       setIsVisible(window.scrollY > 200);
 
-      // Update active section based on scroll position
+      // Update active section based on scroll position with improved detection
       const sections = navigationItems.map(item => item.id);
-      const currentSection = sections.find(section => {
+      let currentSection = sections[0]; // Default to first section
+      
+      // Find the section that's currently most visible in the viewport
+      for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
+          const headerOffset = 120; // Account for header and some padding
+          
+          // Check if section is in viewport (with some tolerance)
+          if (rect.top <= headerOffset && rect.bottom > headerOffset) {
+            currentSection = section;
+            break;
+          }
+          // If we're near the bottom of the page, highlight the last visible section
+          if (rect.top <= window.innerHeight / 2) {
+            currentSection = section;
+          }
         }
-        return false;
-      });
-
-      if (currentSection) {
-        setActiveSection(currentSection);
       }
-    };
 
-    window.addEventListener('scroll', handleScroll);
+      setActiveSection(currentSection);
+    }, 16); // ~60fps throttling
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial call to set correct state
+    handleScroll();
+    
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [throttle]);
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const headerOffset = 80; // Account for fixed navigation
+      // Dynamic header offset calculation for better responsive behavior
+      const headerElement = document.querySelector('header');
+      const headerHeight = headerElement ? headerElement.offsetHeight : 0;
+      const additionalOffset = 20; // Extra padding for better visual spacing
+      const totalOffset = headerHeight + additionalOffset;
+      
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
 
       window.scrollTo({
-        top: offsetPosition,
+        top: Math.max(0, offsetPosition), // Ensure we don't scroll above the page
         behavior: 'smooth'
       });
     }
-  };
+  }, []);
 
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
-  };
+  }, []);
 
   return (
     <>
       {/* Desktop Navigation - Fixed Sidebar */}
-      <nav className={`fixed left-6 top-1/2 transform -translate-y-1/2 z-50 transition-all duration-300 hidden lg:block ${
-        isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'
-      }`}>
+      <nav 
+        className={`fixed left-4 lg:left-6 top-1/2 transform -translate-y-1/2 z-50 transition-all duration-300 hidden lg:block ${
+          isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'
+        }`}
+        aria-label="Portfolio section navigation"
+        role="navigation"
+      >
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-2">
           <div className="space-y-1">
             {navigationItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 ${
                   activeSection === item.id
                     ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
-                title={item.label}
+                title={`Navigate to ${item.label} section`}
+                aria-label={`Navigate to ${item.label} section`}
+                aria-current={activeSection === item.id ? 'true' : 'false'}
               >
                 {item.icon}
                 <span className="whitespace-nowrap">{item.label}</span>
@@ -137,21 +181,27 @@ export default function PortfolioNavigation() {
       </nav>
 
       {/* Mobile Navigation - Bottom Fixed */}
-      <nav className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 lg:hidden ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-      }`}>
-        <div className="bg-white dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 px-4 py-2">
+      <nav 
+        className={`fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 lg:hidden ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+        aria-label="Portfolio section navigation"
+        role="navigation"
+      >
+        <div className="bg-white dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 px-3 sm:px-4 py-2">
           <div className="flex items-center gap-1">
             {navigationItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`p-2 rounded-full transition-colors ${
+                className={`p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 ${
                   activeSection === item.id
                     ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
-                title={item.label}
+                title={`Navigate to ${item.label} section`}
+                aria-label={`Navigate to ${item.label} section`}
+                aria-current={activeSection === item.id ? 'true' : 'false'}
               >
                 {item.icon}
               </button>
@@ -163,12 +213,13 @@ export default function PortfolioNavigation() {
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 ${
+        className={`fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ${
           isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         }`}
-        title="Scroll to top"
+        title="Scroll to top of page"
+        aria-label="Scroll to top of page"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
       </button>
