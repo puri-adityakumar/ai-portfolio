@@ -35,31 +35,49 @@ export async function loadPortfolioData(): Promise<PortfolioData> {
 export function validatePortfolioData(data: any): ValidationResult {
   const errors: string[] = [];
 
-  // Validate personal info
-  if (!data.personal) {
-    errors.push('Missing personal information');
+  // Validate profile info
+  if (!data.profile) {
+    errors.push('Missing profile information');
   } else {
-    const required = ['name', 'title', 'email', 'phone', 'location', 'summary', 'photo'];
+    const required = ['name', 'title', 'email', 'phone', 'location', 'bio', 'github', 'linkedin'];
     required.forEach(field => {
-      if (!data.personal[field] || typeof data.personal[field] !== 'string') {
-        errors.push(`Missing or invalid personal.${field}`);
+      if (!data.profile[field] || typeof data.profile[field] !== 'string') {
+        errors.push(`Missing or invalid profile.${field}`);
       }
     });
   }
 
-  // Validate experience array
-  if (!Array.isArray(data.experience)) {
-    errors.push('Experience must be an array');
+  // Validate skills object
+  if (!data.skills) {
+    errors.push('Missing skills information');
   } else {
-    data.experience.forEach((exp: any, index: number) => {
-      const required = ['company', 'position', 'duration', 'description'];
+    const skillCategories = ['languages', 'frameworks', 'devops', 'tools'];
+    skillCategories.forEach(category => {
+      if (!Array.isArray(data.skills[category])) {
+        errors.push(`skills.${category} must be an array`);
+      }
+    });
+  }
+
+  // Validate experiences array
+  if (!Array.isArray(data.experiences)) {
+    errors.push('Experiences must be an array');
+  } else {
+    data.experiences.forEach((exp: any, index: number) => {
+      const required = ['id', 'role', 'company', 'location', 'period', 'startDate', 'endDate'];
       required.forEach(field => {
         if (!exp[field] || typeof exp[field] !== 'string') {
-          errors.push(`Missing or invalid experience[${index}].${field}`);
+          errors.push(`Missing or invalid experiences[${index}].${field}`);
         }
       });
+      if (typeof exp.current !== 'boolean') {
+        errors.push(`experiences[${index}].current must be a boolean`);
+      }
+      if (!Array.isArray(exp.highlights)) {
+        errors.push(`experiences[${index}].highlights must be an array`);
+      }
       if (!Array.isArray(exp.technologies)) {
-        errors.push(`experience[${index}].technologies must be an array`);
+        errors.push(`experiences[${index}].technologies must be an array`);
       }
     });
   }
@@ -69,43 +87,21 @@ export function validatePortfolioData(data: any): ValidationResult {
     errors.push('Projects must be an array');
   } else {
     data.projects.forEach((project: any, index: number) => {
-      const required = ['name', 'description', 'link', 'github'];
+      const required = ['id', 'name', 'description', 'githubUrl'];
       required.forEach(field => {
         if (!project[field] || typeof project[field] !== 'string') {
           errors.push(`Missing or invalid projects[${index}].${field}`);
         }
       });
-      if (!Array.isArray(project.technologies)) {
-        errors.push(`projects[${index}].technologies must be an array`);
+      if (typeof project.featured !== 'boolean') {
+        errors.push(`projects[${index}].featured must be a boolean`);
       }
-    });
-  }
-
-  // Validate skills array
-  if (!Array.isArray(data.skills)) {
-    errors.push('Skills must be an array');
-  } else {
-    data.skills.forEach((skill: any, index: number) => {
-      if (!skill.category || typeof skill.category !== 'string') {
-        errors.push(`Missing or invalid skills[${index}].category`);
+      if (!Array.isArray(project.techStack)) {
+        errors.push(`projects[${index}].techStack must be an array`);
       }
-      if (!Array.isArray(skill.items)) {
-        errors.push(`skills[${index}].items must be an array`);
+      if (!Array.isArray(project.highlights)) {
+        errors.push(`projects[${index}].highlights must be an array`);
       }
-    });
-  }
-
-  // Validate education array
-  if (!Array.isArray(data.education)) {
-    errors.push('Education must be an array');
-  } else {
-    data.education.forEach((edu: any, index: number) => {
-      const required = ['institution', 'degree', 'field', 'duration'];
-      required.forEach(field => {
-        if (!edu[field] || typeof edu[field] !== 'string') {
-          errors.push(`Missing or invalid education[${index}].${field}`);
-        }
-      });
     });
   }
 
@@ -114,23 +110,29 @@ export function validatePortfolioData(data: any): ValidationResult {
     errors.push('Achievements must be an array');
   } else {
     data.achievements.forEach((achievement: any, index: number) => {
-      if (typeof achievement !== 'string') {
-        errors.push(`achievements[${index}] must be a string`);
-      }
+      const required = ['id', 'title', 'organization', 'date', 'description', 'category'];
+      required.forEach(field => {
+        if (!achievement[field] || typeof achievement[field] !== 'string') {
+          errors.push(`Missing or invalid achievements[${index}].${field}`);
+        }
+      });
     });
   }
 
-  // Validate social array
-  if (!Array.isArray(data.social)) {
-    errors.push('Social must be an array');
+  // Validate education array
+  if (!Array.isArray(data.education)) {
+    errors.push('Education must be an array');
   } else {
-    data.social.forEach((social: any, index: number) => {
-      const required = ['platform', 'url'];
+    data.education.forEach((edu: any, index: number) => {
+      const required = ['id', 'institution', 'degree', 'field', 'location', 'period', 'startDate', 'endDate'];
       required.forEach(field => {
-        if (!social[field] || typeof social[field] !== 'string') {
-          errors.push(`Missing or invalid social[${index}].${field}`);
+        if (!edu[field] || typeof edu[field] !== 'string') {
+          errors.push(`Missing or invalid education[${index}].${field}`);
         }
       });
+      if (typeof edu.current !== 'boolean') {
+        errors.push(`education[${index}].current must be a boolean`);
+      }
     });
   }
 
@@ -147,49 +149,61 @@ export function validatePortfolioData(data: any): ValidationResult {
  */
 export function formatPortfolioForLLM(data: PortfolioData): string {
   const context = `
-You are an AI assistant representing ${data.personal.name}, a ${data.personal.title}.
+You are an AI assistant representing ${data.profile.name}, a ${data.profile.title}.
 
-PERSONAL INFO:
-- Name: ${data.personal.name}
-- Title: ${data.personal.title}
-- Location: ${data.personal.location}
-- Email: ${data.personal.email}
-- Phone: ${data.personal.phone}
-- Summary: ${data.personal.summary}
+PROFILE:
+- Name: ${data.profile.name}
+- Title: ${data.profile.title}
+- Location: ${data.profile.location}
+- Email: ${data.profile.email}
+- Phone: ${data.profile.phone}
+- Bio: ${data.profile.bio}
+- GitHub: ${data.profile.githubUrl}
+- LinkedIn: ${data.profile.linkedinUrl}
 
 EXPERIENCE:
-${data.experience.map(exp => `
-- ${exp.position} at ${exp.company} (${exp.duration})
-  ${exp.description}
+${data.experiences.map(exp => `
+- ${exp.role} at ${exp.company} (${exp.period})
+  Location: ${exp.location}
+  Key Highlights:
+${exp.highlights.map(highlight => `  • ${highlight}`).join('\n')}
   Technologies: ${exp.technologies.join(', ')}
 `).join('')}
 
 PROJECTS:
 ${data.projects.map(project => `
-- ${project.name}
+- ${project.name}${project.featured ? ' (Featured)' : ''}
   ${project.description}
-  Technologies: ${project.technologies.join(', ')}
-  Link: ${project.link}
-  GitHub: ${project.github}
+  Tech Stack: ${project.techStack.join(', ')}
+  ${project.liveUrl ? `Live URL: ${project.liveUrl}` : ''}
+  GitHub: ${project.githubUrl}
+  Key Highlights:
+${project.highlights.map(highlight => `  • ${highlight}`).join('\n')}
 `).join('')}
 
 SKILLS:
-${data.skills.map(skillCategory => `
-${skillCategory.category}: ${skillCategory.items.join(', ')}
-`).join('')}
+- Programming Languages: ${data.skills.languages.join(', ')}
+- Frameworks & Libraries: ${data.skills.frameworks.join(', ')}
+- DevOps & Cloud: ${data.skills.devops.join(', ')}
+- Tools & Platforms: ${data.skills.tools.join(', ')}
 
 EDUCATION:
 ${data.education.map(edu => `
-- ${edu.degree} in ${edu.field} from ${edu.institution} (${edu.duration})${edu.gpa ? ` - GPA: ${edu.gpa}` : ''}
+- ${edu.degree} in ${edu.field} from ${edu.institution} (${edu.period})
+  Location: ${edu.location}
+  ${edu.current ? 'Currently enrolled' : 'Completed'}
 `).join('')}
 
 ACHIEVEMENTS:
-${data.achievements.map(achievement => `- ${achievement}`).join('\n')}
+${data.achievements.map(achievement => `
+- ${achievement.title} (${achievement.date})
+  Organization: ${achievement.organization}
+  Category: ${achievement.category}
+  Description: ${achievement.description}
+  ${achievement.link ? `Link: ${achievement.link}` : ''}
+`).join('')}
 
-SOCIAL LINKS:
-${data.social.map(social => `- ${social.platform}: ${social.url}`).join('\n')}
-
-Please answer questions about this professional's background, experience, and skills based on this information. Be conversational and helpful, and provide specific details when asked about particular experiences, projects, or skills.
+Please answer questions about this professional's background, experience, and skills based on this information. Be conversational and helpful, and provide specific details when asked about particular experiences, projects, or skills. You can discuss their work at FarAlpha and WebGuru Infosystems, their AI/ML projects like Clariq and HealerAI, their hackathon win, and their educational background.
 `;
 
   return context.trim();

@@ -128,21 +128,28 @@ interface ChatResponse {
 #### Data Loading Interface
 ```typescript
 interface PortfolioData {
-  personal: {
+  profile: {
     name: string;
-    title: string;
     email: string;
     phone: string;
+    github: string;
+    githubUrl: string;
+    linkedin: string;
+    linkedinUrl: string;
     location: string;
-    summary: string;
-    photo: string;
+    title: string;
+    bio: string;
   };
-  experience: ExperienceItem[];
+  skills: {
+    languages: string[];
+    frameworks: string[];
+    devops: string[];
+    tools: string[];
+  };
+  experiences: ExperienceItem[];
   projects: ProjectItem[];
-  skills: SkillCategory[];
+  achievements: Achievement[];
   education: EducationItem[];
-  achievements: string[];
-  social: SocialLink[];
 }
 ```
 
@@ -152,55 +159,78 @@ interface PortfolioData {
 
 ```json
 {
-  "personal": {
-    "name": "Professional Name",
-    "title": "Job Title",
-    "email": "email@example.com",
-    "phone": "+1234567890",
-    "location": "City, Country",
-    "summary": "Professional summary...",
-    "photo": "/images/profile.jpg"
+  "profile": {
+    "name": "Aditya Kumar Puri",
+    "email": "kumar.adityapuri@gmail.com",
+    "phone": "(+91) 1234567890",
+    "github": "puriadityakumar",
+    "githubUrl": "https://github.com/puriadityakumar",
+    "linkedin": "puri-adityakumar",
+    "linkedinUrl": "https://linkedin.com/in/puri-adityakumar",
+    "location": "Kolkata, West Bengal, India",
+    "title": "Software Engineer",
+    "bio": "Software Engineer with expertise in full-stack development, AI/ML systems, and cloud architecture..."
   },
-  "experience": [
+  "skills": {
+    "languages": ["JavaScript", "Python", "SQL"],
+    "frameworks": ["ReactJS", "NextJS", "FastAPI", "ExpressJS"],
+    "devops": ["Git", "CI/CD", "Linux", "Kubernetes", "Docker", "AWS", "Azure"],
+    "tools": ["Supabase", "Figma", "Slack", "GitLab", "n8n", "Langflow"]
+  },
+  "experiences": [
     {
-      "company": "Company Name",
-      "position": "Job Title",
-      "duration": "Start - End",
-      "description": "Job description...",
-      "technologies": ["Tech1", "Tech2"]
+      "id": "exp_1",
+      "role": "Software Engineer Intern",
+      "company": "FarAlpha",
+      "location": "Remote",
+      "period": "Apr 2025 – Sept 2025",
+      "startDate": "2025-04",
+      "endDate": "2025-09",
+      "current": false,
+      "highlights": [
+        "Built file upload optimization and video processing systems using AWS Step Functions and EKS",
+        "Set up monitoring infrastructure with Sentry, AWS CloudWatch, and RUM"
+      ],
+      "technologies": ["AWS Step Functions", "EKS", "Sentry", "AWS CloudWatch"]
     }
   ],
   "projects": [
     {
-      "name": "Project Name",
-      "description": "Project description...",
-      "technologies": ["Tech1", "Tech2"],
-      "link": "https://project-url.com",
-      "github": "https://github.com/user/repo"
+      "id": "proj_1",
+      "name": "Clariq",
+      "description": "AI-powered sales research platform automating prospect analysis",
+      "techStack": ["FastAPI", "Next.js", "Cerebras LLM", "Exa API"],
+      "githubUrl": "",
+      "liveUrl": "",
+      "highlights": [
+        "AI-powered sales research platform automating prospect analysis",
+        "Integrated neural search via Exa API with Cerebras LLM"
+      ],
+      "featured": true
     }
   ],
-  "skills": [
+  "achievements": [
     {
-      "category": "Programming Languages",
-      "items": ["JavaScript", "Python", "TypeScript"]
+      "id": "ach_1",
+      "title": "1st Place: IndiaAI Impact Gen-AI Hackathon",
+      "organization": "CNI IISc, IBM & CISCO",
+      "date": "2024",
+      "description": "Track 3: Agentic AI Applications - 'AyushmanAI'",
+      "link": "",
+      "category": "Hackathon"
     }
   ],
   "education": [
     {
-      "institution": "University Name",
-      "degree": "Degree Type",
-      "field": "Field of Study",
-      "duration": "Start - End",
-      "gpa": "3.8/4.0"
-    }
-  ],
-  "achievements": [
-    "Achievement description..."
-  ],
-  "social": [
-    {
-      "platform": "LinkedIn",
-      "url": "https://linkedin.com/in/username"
+      "id": "edu_1",
+      "institution": "Brainware University",
+      "degree": "Master of Computer Applications",
+      "field": "Computer Applications",
+      "location": "Barasat, West-Bengal",
+      "period": "Aug. 2023 – July 2025",
+      "startDate": "2023-08",
+      "endDate": "2025-07",
+      "current": true
     }
   ]
 }
@@ -213,19 +243,30 @@ The system transforms `data.json` into LLM-friendly context:
 ```typescript
 function formatPortfolioForLLM(data: PortfolioData): string {
   return `
-You are an AI assistant representing ${data.personal.name}, a ${data.personal.title}.
+You are an AI assistant representing ${data.profile.name}, a ${data.profile.title}.
 
-PERSONAL INFO:
-- Name: ${data.personal.name}
-- Title: ${data.personal.title}
-- Location: ${data.personal.location}
-- Summary: ${data.personal.summary}
+PROFILE:
+- Name: ${data.profile.name}
+- Title: ${data.profile.title}
+- Location: ${data.profile.location}
+- Bio: ${data.profile.bio}
 
 EXPERIENCE:
-${data.experience.map(exp => `
-- ${exp.position} at ${exp.company} (${exp.duration})
-  ${exp.description}
+${data.experiences.map(exp => `
+- ${exp.role} at ${exp.company} (${exp.period})
+  Location: ${exp.location}
+  Key Highlights:
+${exp.highlights.map(highlight => `  • ${highlight}`).join('\n')}
   Technologies: ${exp.technologies.join(', ')}
+`).join('')}
+
+PROJECTS:
+${data.projects.map(project => `
+- ${project.name}${project.featured ? ' (Featured)' : ''}
+  ${project.description}
+  Tech Stack: ${project.techStack.join(', ')}
+  Key Highlights:
+${project.highlights.map(highlight => `  • ${highlight}`).join('\n')}
 `).join('')}
 
 [Additional sections formatted similarly...]

@@ -1,121 +1,209 @@
 {
-  "personal": {
-    "name": "Alex Johnson",
-    "title": "Full Stack Developer",
-    "email": "alex.johnson@email.com",
-    "phone": "+1 (555) 123-4567",
-    "location": "San Francisco, CA",
-    "summary": "Passionate full stack developer with 5+ years of experience building scalable web applications. Specialized in React, Node.js, and cloud technologies with a focus on user experience and performance optimization.",
-    "photo": "/images/profile.jpg"
+  "profile": {
+    "name": "Aditya Kumar Puri",
+    "email": "kumar.adityapuri@gmail.com",
+    "phone": "(+91) 1234567890",
+    "github": "puriadityakumar",
+    "githubUrl": "https://github.com/puriadityakumar",
+    "linkedin": "puri-adityakumar",
+    "linkedinUrl": "https://linkedin.com/in/puri-adityakumar",
+    "location": "Kolkata, West Bengal, India",
+    "title": "Software Engineer",
+    "bio": "Software Engineer with expertise in full-stack development, AI/ML systems, and cloud architecture. Experienced in building scalable applications, implementing RAG systems, and orchestrating complex AI workflows."
   },
-  "experience": [
+  "skills": {
+    "languages": [
+      "JavaScript",
+      "Python",
+      "SQL"
+    ],
+    "frameworks": [
+      "ReactJS",
+      "NextJS",
+      "FastAPI",
+      "ExpressJS",
+      "NodeJS",
+      "MongoDB",
+      "LangChain",
+      "WebSocket"
+    ],
+    "devops": [
+      "Git",
+      "CI/CD",
+      "Linux",
+      "Kubernetes",
+      "Docker",
+      "AWS",
+      "Azure",
+      "Sentry"
+    ],
+    "tools": [
+      "Supabase",
+      "Figma",
+      "Slack",
+      "GitLab",
+      "n8n",
+      "Langflow",
+      "AI Agents"
+    ]
+  },
+  "experiences": [
     {
-      "company": "TechCorp Solutions",
-      "position": "Senior Full Stack Developer",
-      "duration": "2022 - Present",
-      "description": "Lead development of customer-facing web applications serving 100K+ users. Architected microservices infrastructure reducing response times by 40%. Mentored junior developers and established coding standards.",
-      "technologies": ["React", "Node.js", "TypeScript", "AWS", "PostgreSQL", "Docker"]
+      "id": "exp_1",
+      "role": "Software Engineer Intern",
+      "company": "FarAlpha",
+      "location": "Remote",
+      "period": "Apr 2025 – Sept 2025",
+      "startDate": "2025-04",
+      "endDate": "2025-09",
+      "current": false,
+      "highlights": [
+        "Built file upload optimization and video processing systems using AWS Step Functions and EKS, cutting latency while streamlining media handling pipelines",
+        "Set up monitoring infrastructure with Sentry, AWS CloudWatch, and RUM to track system performance and catch issues before they affected users",
+        "Designed AI-powered RAG systems with voice transcription capabilities and orchestrated complex AI workflows using n8n for seamless integration across services",
+        "Developed agentic systems using LangChain and leveraged Redis as a caching database to accelerate query performance and reduce response times"
+      ],
+      "technologies": [
+        "AWS Step Functions",
+        "EKS",
+        "Sentry",
+        "AWS CloudWatch",
+        "RUM",
+        "RAG",
+        "n8n",
+        "LangChain",
+        "Redis"
+      ]
     },
     {
-      "company": "StartupXYZ",
-      "position": "Full Stack Developer",
-      "duration": "2020 - 2022",
-      "description": "Built MVP from ground up using modern web technologies. Implemented real-time features with WebSocket connections. Collaborated with design team to create responsive, accessible user interfaces.",
-      "technologies": ["React", "Express.js", "MongoDB", "Socket.io", "Tailwind CSS"]
-    },
-    {
-      "company": "Digital Agency Pro",
-      "position": "Frontend Developer",
-      "duration": "2019 - 2020",
-      "description": "Developed responsive websites for various clients. Optimized performance achieving 95+ Lighthouse scores. Integrated third-party APIs and payment systems.",
-      "technologies": ["JavaScript", "HTML5", "CSS3", "WordPress", "Stripe API"]
+      "id": "exp_2",
+      "role": "AWS Solution Architect Intern",
+      "company": "WebGuru Infosystems Pvt. Ltd.",
+      "location": "Kolkata, West Bengal, India",
+      "period": "Nov 2024 – Feb 2025",
+      "startDate": "2024-11",
+      "endDate": "2025-02",
+      "current": false,
+      "highlights": [
+        "Migrated legacy web application from VM-based infrastructure to scalable serverless architecture reducing operational overhead",
+        "Deployed production applications using AWS Amplify and Elastic Beanstalk with RDBMS integration for improved scalability",
+        "Designed and architected scalable system for quick commerce platform while gaining expertise in cost optimization and billing management"
+      ],
+      "technologies": [
+        "AWS",
+        "Serverless",
+        "AWS Amplify",
+        "Elastic Beanstalk",
+        "RDBMS"
+      ]
     }
   ],
   "projects": [
     {
-      "name": "E-commerce Platform",
-      "description": "Full-featured e-commerce platform with real-time inventory management, payment processing, and admin dashboard. Supports multiple vendors and includes analytics.",
-      "technologies": ["Next.js", "Prisma", "PostgreSQL", "Stripe", "Tailwind CSS"],
-      "link": "https://ecommerce-demo.com",
-      "github": "https://github.com/alexjohnson/ecommerce-platform"
+      "id": "proj_1",
+      "name": "Clariq",
+      "description": "AI-powered sales research platform automating prospect analysis and market insights with voice interaction and programmatic API access",
+      "techStack": [
+        "FastAPI",
+        "Next.js",
+        "Cerebras LLM",
+        "Exa API",
+        "LiveKit",
+        "Appwrite",
+        "Tailwind CSS"
+      ],
+      "githubUrl": "",
+      "liveUrl": "",
+      "highlights": [
+        "AI-powered sales research platform automating prospect analysis and market insights with voice interaction and programmatic API access",
+        "Integrated neural search via Exa API with Cerebras LLM for decision-ready briefs and LiveKit for hands-free research workflows"
+      ],
+      "featured": true
     },
     {
-      "name": "Task Management App",
-      "description": "Collaborative task management application with real-time updates, file attachments, and team workspaces. Features drag-and-drop interface and notification system.",
-      "technologies": ["React", "Node.js", "Socket.io", "MongoDB", "Material-UI"],
-      "link": "https://taskmanager-app.com",
-      "github": "https://github.com/alexjohnson/task-manager"
+      "id": "proj_2",
+      "name": "HealerAI",
+      "description": "Healthcare AI assistant streamlining patient journeys from appointment booking to post-consultation queries, reducing manual documentation burden",
+      "techStack": [
+        "Langflow",
+        "Supabase",
+        "AstraDB",
+        "Watsonx",
+        "Gemini",
+        "Python"
+      ],
+      "githubUrl": "",
+      "liveUrl": null,
+      "highlights": [
+        "Healthcare AI assistant streamlining patient journeys from appointment booking to post-consultation queries, reducing manual documentation burden",
+        "Built three-phase agentic workflow with Langflow and vector-based RAG using AstraDB for automated transcription and clinical note generation"
+      ],
+      "featured": true
     },
     {
-      "name": "Weather Dashboard",
-      "description": "Interactive weather dashboard with location-based forecasts, historical data visualization, and severe weather alerts. Responsive design with dark/light themes.",
-      "technologies": ["Vue.js", "Chart.js", "OpenWeather API", "Vuetify"],
-      "link": "https://weather-dashboard-demo.com",
-      "github": "https://github.com/alexjohnson/weather-dashboard"
+      "id": "proj_3",
+      "name": "JustPlanIt",
+      "description": "Agentic AI platform validating project ideas and generating structured documentation with requirements, user stories, and risk assessments",
+      "techStack": [
+        "React",
+        "Vite",
+        "Appwrite",
+        "OpenRouter",
+        "LangFlow"
+      ],
+      "githubUrl": "",
+      "liveUrl": "",
+      "highlights": [
+        "Agentic AI platform validating project ideas and generating structured documentation with requirements, user stories, and risk assessments",
+        "Orchestrated AI workflows using LangFlow and OpenRouter to automate idea validation and maintain team alignment before development"
+      ],
+      "featured": true
     }
   ],
-  "skills": [
+  "achievements": [
     {
-      "category": "Programming Languages",
-      "items": ["JavaScript", "TypeScript", "Python", "Java", "SQL"]
-    },
-    {
-      "category": "Frontend Technologies",
-      "items": ["React", "Vue.js", "Next.js", "HTML5", "CSS3", "Tailwind CSS", "Material-UI"]
-    },
-    {
-      "category": "Backend Technologies",
-      "items": ["Node.js", "Express.js", "PostgreSQL", "MongoDB", "Redis", "GraphQL"]
-    },
-    {
-      "category": "Cloud & DevOps",
-      "items": ["AWS", "Docker", "Kubernetes", "CI/CD", "Terraform", "Nginx"]
-    },
-    {
-      "category": "Tools & Methodologies",
-      "items": ["Git", "Agile", "TDD", "REST APIs", "Microservices", "Performance Optimization"]
+      "id": "ach_1",
+      "title": "1st Place: IndiaAI Impact Gen-AI Hackathon",
+      "organization": "CNI IISc, IBM & CISCO",
+      "date": "2024",
+      "description": "Track 3: Agentic AI Applications - 'AyushmanAI' (Project ID: T3:365): Healthcare automation, streamlining the patient-doctor workflows for appointment scheduling, diagnosis documentation, and follow-up",
+      "link": "",
+      "category": "Hackathon"
     }
   ],
   "education": [
     {
-      "institution": "University of California, Berkeley",
+      "id": "edu_1",
+      "institution": "Brainware University",
+      "degree": "Master of Computer Applications",
+      "field": "Computer Applications",
+      "location": "Barasat, West-Bengal",
+      "period": "Aug. 2023 – July 2025",
+      "startDate": "2023-08",
+      "endDate": "2025-07",
+      "current": true
+    },
+    {
+      "id": "edu_2",
+      "institution": "Babasaheb Bhimrao Ambedkar Bihar University",
       "degree": "Bachelor of Science",
-      "field": "Computer Science",
-      "duration": "2015 - 2019",
-      "gpa": "3.8/4.0"
+      "field": "Science",
+      "location": "Muzaffarpur, Bihar",
+      "period": "Sep. 2019 – Jan 2023",
+      "startDate": "2019-09",
+      "endDate": "2023-01",
+      "current": false
     },
     {
-      "institution": "FreeCodeCamp",
-      "degree": "Full Stack Web Development Certification",
-      "field": "Web Development",
-      "duration": "2018",
-      "gpa": null
-    }
-  ],
-  "achievements": [
-    "Led team that won 'Best Innovation' award at company hackathon 2023",
-    "Contributed to open source projects with 500+ GitHub stars",
-    "Speaker at React Conference 2022 - 'Building Scalable Component Libraries'",
-    "AWS Certified Solutions Architect - Associate",
-    "Mentored 10+ junior developers through coding bootcamp program",
-    "Published technical articles with 50K+ total views on Medium"
-  ],
-  "social": [
-    {
-      "platform": "LinkedIn",
-      "url": "https://linkedin.com/in/alexjohnson-dev"
-    },
-    {
-      "platform": "GitHub",
-      "url": "https://github.com/alexjohnson"
-    },
-    {
-      "platform": "Twitter",
-      "url": "https://twitter.com/alexjohnson_dev"
-    },
-    {
-      "platform": "Medium",
-      "url": "https://medium.com/@alexjohnson"
+      "id": "edu_3",
+      "institution": "Kendriya Vidyalaya",
+      "degree": "Class XII",
+      "field": "Higher Secondary",
+      "location": "Dum Dum, West-Bengal",
+      "period": "May 2018",
+      "startDate": "2018-05",
+      "endDate": "2018-05",
+      "current": false
     }
   ]
 }

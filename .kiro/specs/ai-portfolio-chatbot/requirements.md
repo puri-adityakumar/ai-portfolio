@@ -44,14 +44,14 @@ The AI Portfolio Chatbot is a dual-interface portfolio website that provides vis
 
 ### Requirement 4
 
-**User Story:** As a developer maintaining the system, I want a single source of truth for CV data, so that information stays consistent across both interfaces.
+**User Story:** As a developer maintaining the system, I want a single source of truth for portfolio data, so that information stays consistent across both interfaces.
 
 #### Acceptance Criteria
 
-1. WHEN portfolio data is needed THEN the system SHALL read from a single data.json file
-2. WHEN the chat interface needs context THEN the system SHALL use the same data.json formatted for LLM consumption
-3. WHEN the portfolio interface renders THEN the system SHALL use the same data.json for display
-4. WHEN portfolio data is updated THEN both interfaces SHALL automatically reflect the changes without code modifications
+1. WHEN portfolio data is needed THEN the system SHALL read from a single data.json file containing profile, experiences, projects, skills, achievements, and education
+2. WHEN the chat interface needs context THEN the system SHALL use the same data.json formatted for LLM consumption with comprehensive professional background
+3. WHEN the portfolio interface renders THEN the system SHALL use the same data.json to display detailed experience highlights, project information, and achievements
+4. WHEN portfolio data is updated THEN both interfaces SHALL automatically reflect the changes including new experiences, projects, or achievements without code modifications
 
 ### Requirement 5
 

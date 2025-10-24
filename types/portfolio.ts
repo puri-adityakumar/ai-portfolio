@@ -1,57 +1,78 @@
 // Core data model interfaces for the portfolio application
 
-export interface PersonalInfo {
+export interface Profile {
   name: string;
-  title: string;
   email: string;
   phone: string;
+  github: string;
+  githubUrl: string;
+  linkedin: string;
+  linkedinUrl: string;
   location: string;
-  summary: string;
-  photo: string;
+  title: string;
+  bio: string;
+}
+
+export interface Skills {
+  languages: string[];
+  frameworks: string[];
+  devops: string[];
+  tools: string[];
 }
 
 export interface ExperienceItem {
+  id: string;
+  role: string;
   company: string;
-  position: string;
-  duration: string;
-  description: string;
+  location: string;
+  period: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+  highlights: string[];
   technologies: string[];
 }
 
 export interface ProjectItem {
+  id: string;
   name: string;
   description: string;
-  technologies: string[];
-  link: string;
-  github: string;
+  techStack: string[];
+  githubUrl: string;
+  liveUrl: string | null;
+  highlights: string[];
+  featured: boolean;
 }
 
-export interface SkillCategory {
+export interface Achievement {
+  id: string;
+  title: string;
+  organization: string;
+  date: string;
+  description: string;
+  link: string;
   category: string;
-  items: string[];
 }
 
 export interface EducationItem {
+  id: string;
   institution: string;
   degree: string;
   field: string;
-  duration: string;
-  gpa: string | null;
-}
-
-export interface SocialLink {
-  platform: string;
-  url: string;
+  location: string;
+  period: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
 }
 
 export interface PortfolioData {
-  personal: PersonalInfo;
-  experience: ExperienceItem[];
+  profile: Profile;
+  skills: Skills;
+  experiences: ExperienceItem[];
   projects: ProjectItem[];
-  skills: SkillCategory[];
+  achievements: Achievement[];
   education: EducationItem[];
-  achievements: string[];
-  social: SocialLink[];
 }
 
 // Chat-related interfaces

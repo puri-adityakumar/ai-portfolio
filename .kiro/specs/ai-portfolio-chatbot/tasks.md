@@ -5,6 +5,9 @@
 
 
 
+
+
+
   - Create data.json file with complete portfolio data structure
   - Set up TypeScript interfaces for all data models
   - Create utility functions for data loading and validation
