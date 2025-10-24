@@ -1,158 +1,155 @@
 # Implementation Plan
 
-- [ ] 1. Set up project dependencies and core configuration
-  - Install required dependencies: Vercel AI SDK, OpenRouter integration, and additional TypeScript types
-  - Configure environment variables for OpenRouter API key
-  - Update Next.js configuration for API routes and optimization settings
+- [-] 1. Set up project structure and data foundation
+
+
+  - Create data.json file with complete portfolio data structure
+  - Set up TypeScript interfaces for all data models
+  - Create utility functions for data loading and validation
+  - _Requirements: 4.1, 4.2, 4.3, 4.4_
+
+- [ ] 2. Implement homepage with mode selection
+  - Create homepage component with hero section and mode selection buttons
+  - Implement responsive design with smooth animations
+  - Add navigation to portfolio and chat pages
+  - _Requirements: 1.1, 1.2, 1.3, 1.4_
+
+- [ ] 3. Build traditional portfolio page
+- [ ] 3.1 Create portfolio page layout and sections
+  - Implement server-side rendered portfolio page
+  - Create sectioned layout for experience, projects, skills, education, achievements
+  - Add professional header with contact information
+  - _Requirements: 3.1, 3.2, 6.2_
+
+- [ ] 3.2 Add portfolio navigation and interactions
+  - Implement smooth scroll navigation between sections
+  - Add download CV functionality
+  - Ensure responsive design across all screen sizes
+  - _Requirements: 3.3, 3.4, 3.5_
+
+- [ ] 3.3 Implement SEO and social sharing
+  - Add meta tags, Open Graph data, and structured markup
+  - Generate sitemap automatically
+  - Optimize for search engine crawling
+  - _Requirements: 8.1, 8.2, 8.3, 8.4_
+
+- [ ]* 3.4 Write unit tests for portfolio components
+  - Test portfolio data rendering
+  - Test responsive behavior
+  - Test navigation functionality
+  - _Requirements: 3.1, 3.2, 3.3_
+
+- [ ] 4. Create chat interface foundation
+- [ ] 4.1 Build chat UI components
+  - Create WhatsApp-like chat interface
+  - Implement message components for user and AI messages
+  - Add typing indicators and loading states
+  - _Requirements: 2.1, 6.3_
+
+- [ ] 4.2 Implement chat state management
+  - Set up conversation state with React hooks
+  - Implement localStorage for conversation persistence
+  - Add conversation history management
+  - _Requirements: 2.4, 2.5_
+
+- [ ] 4.3 Add suggested questions and starter prompts
+  - Create suggested questions component
+  - Implement starter question functionality
+  - Add question suggestions based on portfolio data
+  - _Requirements: 2.6_
+
+- [ ]* 4.4 Write unit tests for chat components
+  - Test message rendering
+  - Test state management
+  - Test localStorage persistence
+  - _Requirements: 2.1, 2.4, 2.5_
+
+- [ ] 5. Implement LLM integration
+- [ ] 5.1 Create chat API route
+  - Build /api/chat endpoint with environment variable configuration
+  - Implement LLM request handling with proper error handling
+  - Add request validation and sanitization
   - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 2. Create CV data structure and utilities
-  - [ ] 2.1 Create TypeScript interfaces for CV data models
-    - Define Profile, Experience, Project, Skills, Achievement, and Education interfaces
-    - Create main CVData interface that combines all data types
-    - _Requirements: 4.1, 4.2, 4.3, 4.4_
-  
-  - [ ] 2.2 Implement CV data processing utilities
-    - Create CVDataProcessor class with methods for LLM formatting and data manipulation
-    - Implement date formatting, skills categorization, and featured project filtering
-    - Add data validation functions for CV structure
-    - _Requirements: 4.1, 4.2, 4.3, 4.4_
-  
-  - [ ] 2.3 Create sample CV data file
-    - Create cv.json file with Aditya's complete portfolio information
-    - Structure data according to defined TypeScript interfaces
-    - Include all sections: profile, skills, experiences, projects, achievements, education
-    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+- [ ] 5.2 Implement portfolio context formatting
+  - Create function to format data.json for LLM consumption
+  - Implement context injection for chat requests
+  - Add conversation history management in API
+  - _Requirements: 4.2, 2.4_
 
-- [ ] 3. Implement shared components and layout system
-  - [ ] 3.1 Create base layout components
-    - Implement Navigation component for mode switching
-    - Create Layout wrapper component for consistent styling
-    - Add LoadingSpinner and ErrorBoundary components
-    - _Requirements: 1.1, 1.2, 1.3, 1.4, 7.1, 7.2, 7.3, 7.4_
-  
-  - [ ] 3.2 Update root layout with proper metadata and styling
-    - Configure metadata for SEO optimization
-    - Set up proper font loading and CSS variables
-    - Add accessibility attributes to HTML structure
-    - _Requirements: 6.1, 6.2, 7.1, 7.2, 7.3, 7.4, 8.1, 8.2, 8.3, 8.4_
+- [ ] 5.3 Add streaming response handling
+  - Implement token-by-token streaming from LLM
+  - Add client-side streaming response handling
+  - Implement real-time message updates
+  - _Requirements: 2.3_
 
-- [ ] 4. Build landing page with mode selection
-  - [ ] 4.1 Create mode selection interface
-    - Implement ModeSelector component with two prominent buttons
-    - Add feature descriptions for each mode
-    - Style with Tailwind CSS for modern, clean appearance
-    - _Requirements: 1.1, 1.2, 1.3, 1.4_
-  
-  - [ ] 4.2 Implement navigation to chat and portfolio modes
-    - Set up Next.js routing to /chat and /portfolio pages
-    - Add smooth transitions between modes
-    - Ensure proper accessibility for navigation elements
-    - _Requirements: 1.2, 1.3, 6.5, 7.1, 7.2_
+- [ ]* 5.4 Write integration tests for chat API
+  - Test API endpoint with mock LLM responses
+  - Test error handling scenarios
+  - Test streaming functionality
+  - _Requirements: 5.1, 5.3, 2.3_
 
-- [ ] 5. Implement OpenRouter API integration
-  - [ ] 5.1 Create chat API route with OpenRouter integration
-    - Set up /api/chat/route.ts with POST handler
-    - Integrate OpenRouter API for multiple LLM provider access
-    - Implement streaming response handling with Vercel AI SDK
-    - _Requirements: 2.2, 2.3, 5.1, 5.2, 5.3, 5.4_
-  
-  - [ ] 5.2 Add CV context injection and error handling
-    - Format CV data for LLM context in each request
-    - Implement comprehensive error handling for API failures
-    - Add rate limiting and input validation for security
-    - _Requirements: 2.2, 2.4, 4.1, 4.2, 5.3, 5.4_
+- [ ] 6. Implement accessibility and performance optimizations
+- [ ] 6.1 Add accessibility features
+  - Implement keyboard navigation with logical tab order
+  - Add ARIA labels and semantic HTML structure
+  - Ensure high contrast ratios for text readability
+  - Add screen reader announcements for chat messages
+  - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 6. Build chat interface components
-  - [ ] 6.1 Create core chat components
-    - Implement ChatInterface container with useChat hook from AI SDK
-    - Build MessageList component for conversation history display
-    - Create MessageBubble component for individual message rendering
-    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
-  
-  - [ ] 6.2 Implement chat input and interaction features
-    - Build ChatInput component with send functionality
-    - Add SuggestedQuestions component for conversation starters
-    - Implement TypingIndicator for real-time response feedback
-    - _Requirements: 2.1, 2.2, 2.3, 2.6, 6.3, 7.1, 7.2, 7.4_
-  
-  - [ ] 6.3 Add conversation persistence and memory
-    - Configure automatic localStorage persistence via AI SDK
-    - Implement conversation history restoration on page refresh
-    - Ensure full conversation context is sent with each LLM request
-    - _Requirements: 2.4, 2.5_
+- [ ] 6.2 Optimize performance and loading
+  - Implement image optimization and lazy loading
+  - Optimize bundle size and code splitting
+  - Add loading states and smooth transitions
+  - Ensure 2-second load time requirement
+  - _Requirements: 6.1, 6.4, 6.5_
 
-- [ ] 7. Build traditional portfolio interface
-  - [ ] 7.1 Create portfolio layout and navigation
-    - Implement PortfolioLayout component with section navigation
-    - Add smooth scrolling between portfolio sections
-    - Create responsive design that works across all device sizes
-    - _Requirements: 3.1, 3.2, 3.4, 6.1, 6.2, 6.4, 7.1, 7.2, 7.3_
-  
-  - [ ] 7.2 Implement profile and contact sections
-    - Build ProfileHeader component with hero section and contact information
-    - Style with professional appearance and clear typography
-    - Add social media links and contact details from CV data
-    - _Requirements: 3.2, 4.1, 4.2, 8.1, 8.2, 8.4_
-  
-  - [ ] 7.3 Create experience and projects sections
-    - Implement ExperienceSection with timeline layout for work history
-    - Build ProjectsSection with project cards, links, and technology stacks
-    - Display data from cv.json with proper formatting and styling
-    - _Requirements: 3.2, 4.1, 4.2, 6.4, 8.1, 8.2_
-  
-  - [ ] 7.4 Add skills, achievements, and education sections
-    - Create SkillsSection with categorized skills grid layout
-    - Implement AchievementsSection for awards and recognitions
-    - Build EducationSection with academic background timeline
-    - _Requirements: 3.2, 4.1, 4.2_
-  
-  - [ ] 7.5 Implement CV download functionality
-    - Add DownloadButton component for CV file download
-    - Ensure proper file handling and user experience
-    - _Requirements: 3.5_
+- [ ]* 6.3 Write performance and accessibility tests
+  - Test keyboard navigation
+  - Test screen reader compatibility
+  - Test loading performance
+  - _Requirements: 6.1, 7.1, 7.2_
 
-- [ ] 8. Add SEO optimization and metadata
-  - [ ] 8.1 Configure dynamic metadata for all pages
-    - Set up proper title, description, and Open Graph tags
-    - Add structured data markup (JSON-LD) for search engines
-    - Configure social media preview cards
-    - _Requirements: 8.1, 8.2, 8.3, 8.4_
-  
-  - [ ] 8.2 Implement server-side rendering optimizations
-    - Ensure portfolio page uses SSR for optimal SEO
-    - Configure proper caching headers for static assets
-    - Add sitemap generation for search engine indexing
-    - _Requirements: 6.2, 8.1, 8.2, 8.3_
+- [ ] 7. Add error handling and edge cases
+- [ ] 7.1 Implement client-side error handling
+  - Add error boundaries for React components
+  - Implement retry mechanisms for failed requests
+  - Add graceful degradation for missing data
+  - _Requirements: 5.3, 6.3_
 
-- [ ] 9. Implement performance optimizations
-  - [ ] 9.1 Add image optimization and lazy loading
-    - Use Next.js Image component for optimized image loading
-    - Implement lazy loading for portfolio sections
-    - Optimize bundle size with proper code splitting
-    - _Requirements: 6.1, 6.4_
-  
-  - [ ] 9.2 Add loading states and error handling
-    - Implement loading spinners for chat responses and page transitions
-    - Add comprehensive error boundaries for graceful failure handling
-    - Create user-friendly error messages for API failures
-    - _Requirements: 6.3, 5.3, 5.4_
+- [ ] 7.2 Add server-side error handling
+  - Implement environment variable validation
+  - Add comprehensive API error responses
+  - Handle LLM service failures gracefully
+  - _Requirements: 5.4, 5.3_
 
-- [ ] 10. Enhance accessibility and final polish
-  - [ ] 10.1 Implement comprehensive accessibility features
-    - Add proper ARIA labels and semantic HTML throughout
-    - Ensure keyboard navigation works for all interactive elements
-    - Test and fix color contrast ratios for WCAG compliance
-    - _Requirements: 7.1, 7.2, 7.3, 7.4_
-  
-  - [ ] 10.2 Add final styling and responsive design
-    - Polish all components with consistent Tailwind CSS styling
-    - Ensure responsive design works perfectly on mobile, tablet, and desktop
-    - Add smooth animations and transitions for better user experience
-    - _Requirements: 3.4, 6.1, 6.5_
-  
-  - [ ]* 10.3 Write comprehensive unit tests
-    - Create unit tests for CV data processing utilities
-    - Test chat component logic and state management
-    - Write tests for portfolio component rendering and data display
-    - _Requirements: 4.1, 4.2, 2.1, 2.2, 3.1, 3.2_
+- [ ]* 7.3 Write error handling tests
+  - Test error boundary behavior
+  - Test API error responses
+  - Test graceful degradation scenarios
+  - _Requirements: 5.3, 5.4_
+
+- [ ] 8. Final integration and polish
+- [ ] 8.1 Connect all components and test user flows
+  - Integrate homepage navigation with portfolio and chat pages
+  - Test complete user journeys through both interfaces
+  - Ensure seamless transitions between modes
+  - _Requirements: 1.2, 1.3, 6.5_
+
+- [ ] 8.2 Add final styling and responsive design
+  - Polish UI components with consistent styling
+  - Ensure responsive design works across all screen sizes
+  - Add smooth animations and transitions
+  - _Requirements: 3.4, 6.5_
+
+- [ ] 8.3 Environment setup and deployment preparation
+  - Create environment variable documentation
+  - Set up build configuration for deployment
+  - Test with different LLM configurations
+  - _Requirements: 5.1, 5.2_
+
+- [ ]* 8.4 Write end-to-end tests
+  - Test complete user flows
+  - Test responsive design across devices
+  - Test with different data configurations
+  - _Requirements: 1.1, 2.1, 3.1_

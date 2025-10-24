@@ -2,490 +2,320 @@
 
 ## Overview
 
-The AI Portfolio Chatbot is architected as a Next.js 16 application using the App Router pattern, providing a dual-interface experience through three main routes: a landing page for mode selection, an AI-powered chat interface, and a traditional portfolio view. The system leverages server-side rendering for SEO optimization, client-side interactivity for the chat experience, and maintains a single source of truth through a structured JSON data file.
+The AI Portfolio Chatbot is a Next.js application that provides a dual-interface portfolio experience. The system architecture prioritizes simplicity, performance, and maintainability by using a single data source, server-side rendering for SEO, and client-side interactivity for the chat experience.
 
-The architecture prioritizes simplicity by avoiding external databases, using localStorage for conversation persistence, and leveraging Vercel's serverless functions for API endpoints. The design ensures scalability through component modularity and maintainability through clear separation of concerns.
+### Key Design Principles
+- **Single Source of Truth**: All portfolio data comes from `data.json`
+- **Zero Backend Complexity**: Leverages Next.js API routes for minimal server logic
+- **Progressive Enhancement**: Traditional portfolio works without JavaScript, chat requires it
+- **Responsive Design**: Mobile-first approach with seamless desktop scaling
+- **Accessibility First**: WCAG 2.1 AA compliance throughout
 
 ## Architecture
 
-### High-Level System Architecture
+### High-Level Architecture
 
 ```mermaid
 graph TB
-    subgraph "Client Layer"
-        A[Landing Page] --> B[Chat Interface]
-        A --> C[Portfolio Interface]
-        B --> D[Chat Components]
-        C --> E[Portfolio Components]
-    end
+    A[User] --> B[Next.js Frontend]
+    B --> C[Homepage - Mode Selection]
+    B --> D[Traditional Portfolio Page]
+    B --> E[Chat Interface Page]
     
-    subgraph "API Layer"
-        F[/api/chat Route] --> G[OpenRouter API]
-        F --> H[CV Data Processing]
-    end
+    D --> F[data.json]
+    E --> G[API Route /api/chat]
+    G --> F
+    G --> H[LLM Service]
+    
+    E --> I[localStorage]
     
     subgraph "Data Layer"
-        I[cv.json] --> H
-        J[localStorage] --> D
+        F[data.json]
     end
     
     subgraph "External Services"
-        G --> K[GPT-4/Claude/Llama Models]
+        H[Configured LLM]
     end
-    
-    D --> F
-    H --> D
 ```
 
-### Application Flow
-
-1. **Landing Page**: Users select between chat or portfolio mode
-2. **Chat Mode**: Real-time AI conversations with streaming responses and memory
-3. **Portfolio Mode**: Traditional structured presentation of CV data
-4. **Data Flow**: Single cv.json file feeds both interfaces with consistent information
-
-### Technology Stack Integration
-
-- **Next.js 16 App Router**: Handles routing, SSR/CSR, and API routes
-- **Vercel AI SDK**: Manages chat state, streaming, and localStorage persistence
-- **OpenRouter**: Provides unified access to multiple LLM providers
-- **Tailwind CSS 4**: Utility-first styling with design system consistency
-- **TypeScript**: Type safety across all components and data structures
+### Technology Stack
+- **Framework**: Next.js 14+ with App Router
+- **Styling**: Tailwind CSS for utility-first styling
+- **State Management**: React hooks + localStorage for chat persistence
+- **LLM Integration**: Configurable through environment variables
+- **Deployment**: Static export compatible for easy hosting
 
 ## Components and Interfaces
 
-### Core Component Hierarchy
+### Core Components
 
-```
-app/
-├── layout.tsx                 # Root layout with metadata and fonts
-├── page.tsx                   # Landing page with mode selection
-├── chat/
-│   └── page.tsx              # Chat interface container
-├── portfolio/
-│   └── page.tsx              # Portfolio interface container
-└── api/
-    └── chat/
-        └── route.ts          # OpenRouter API integration
-```
+#### 1. Homepage Component (`/`)
+- **Purpose**: Mode selection landing page
+- **Props**: None (uses data.json for basic info)
+- **Features**:
+  - Hero section with professional's name and tagline
+  - Two prominent CTA buttons for mode selection
+  - Brief descriptions of each mode
+  - Responsive design with smooth animations
 
-### Component Architecture
+#### 2. Traditional Portfolio Component (`/portfolio`)
+- **Purpose**: Server-side rendered portfolio display
+- **Props**: Portfolio data from data.json
+- **Features**:
+  - Professional header with photo and contact info
+  - Sectioned layout: Experience, Projects, Skills, Education, Achievements
+  - Smooth scroll navigation
+  - Download CV functionality
+  - SEO optimized with meta tags
 
-#### 1. Landing Page Components
-
-```typescript
-// app/page.tsx
-interface ModeSelectionProps {
-  onModeSelect: (mode: 'chat' | 'portfolio') => void;
-}
-
-// Components:
-- ModeSelector: Main selection interface
-- FeaturePreview: Brief descriptions of each mode
-- Navigation: Header with branding
-```
-
-#### 2. Chat Interface Components
-
-```typescript
-// components/chat/
-interface ChatInterfaceProps {
-  cvData: CVData;
-}
-
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-}
-
-// Components:
-- ChatInterface: Main container with useChat hook
-- MessageList: Scrollable message history
-- MessageBubble: Individual message rendering
-- ChatInput: Input field with send functionality
-- SuggestedQuestions: Initial conversation starters
-- TypingIndicator: Shows when AI is responding
-```
-
-#### 3. Portfolio Interface Components
-
-```typescript
-// components/portfolio/
-interface PortfolioProps {
-  cvData: CVData;
-}
-
-// Components:
-- PortfolioLayout: Main container with navigation
-- ProfileHeader: Hero section with contact info
-- ExperienceSection: Work history with timeline
-- ProjectsSection: Project cards with links
-- SkillsSection: Categorized skills grid
-- AchievementsSection: Awards and recognitions
-- EducationSection: Academic background
-- DownloadButton: CV download functionality
-```
+#### 3. Chat Interface Component (`/chat`)
+- **Purpose**: AI-powered conversational interface
+- **Props**: None (loads data client-side)
+- **Features**:
+  - WhatsApp-like chat UI
+  - Message streaming with typing indicators
+  - Conversation persistence via localStorage
+  - Suggested starter questions
+  - Error handling for API failures
 
 #### 4. Shared Components
 
+##### ChatMessage Component
 ```typescript
-// components/shared/
-- Navigation: Mode switching and branding
-- Layout: Common wrapper for consistent styling
-- LoadingSpinner: Reusable loading states
-- ErrorBoundary: Error handling wrapper
+interface ChatMessageProps {
+  message: string;
+  isUser: boolean;
+  timestamp: Date;
+  isStreaming?: boolean;
+}
 ```
 
-### API Interface Design
-
-#### Chat API Endpoint
-
+##### PortfolioSection Component
 ```typescript
-// app/api/chat/route.ts
+interface PortfolioSectionProps {
+  title: string;
+  content: any;
+  sectionId: string;
+}
+```
+
+##### NavigationMenu Component
+```typescript
+interface NavigationMenuProps {
+  currentPage: 'home' | 'portfolio' | 'chat';
+  portfolioData: PortfolioData;
+}
+```
+
+### API Interfaces
+
+#### Chat API Route (`/api/chat`)
+```typescript
+// Request
 interface ChatRequest {
-  messages: Message[];
-  model?: string;
+  message: string;
+  conversationHistory: ChatMessage[];
 }
 
+// Response (Streaming)
 interface ChatResponse {
-  // Streaming response via AI SDK
-  stream: ReadableStream;
+  content: string;
+  done: boolean;
+  error?: string;
 }
+```
 
-// OpenRouter Integration:
-- Model selection (GPT-4, Claude, Llama)
-- Context injection with CV data
-- Error handling and fallbacks
-- Rate limiting protection
+#### Data Loading Interface
+```typescript
+interface PortfolioData {
+  personal: {
+    name: string;
+    title: string;
+    email: string;
+    phone: string;
+    location: string;
+    summary: string;
+    photo: string;
+  };
+  experience: ExperienceItem[];
+  projects: ProjectItem[];
+  skills: SkillCategory[];
+  education: EducationItem[];
+  achievements: string[];
+  social: SocialLink[];
+}
 ```
 
 ## Data Models
 
-### Core Data Structures
+### Primary Data Structure (data.json)
 
-```typescript
-interface CVData {
-  profile: Profile;
-  skills: Skills;
-  experiences: Experience[];
-  projects: Project[];
-  achievements: Achievement[];
-  education: Education[];
-}
-
-interface Profile {
-  name: string;
-  email: string;
-  phone: string;
-  github: string;
-  linkedin: string;
-  portfolio: string;
-  location: string;
-  summary?: string;
-}
-
-interface Experience {
-  id: string;
-  role: string;
-  company: string;
-  location: string;
-  period: string;
-  startDate: string;
-  endDate: string;
-  highlights: string[];
-  technologies?: string[];
-}
-
-interface Project {
-  id: string;
-  name: string;
-  description: string;
-  techStack: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-  highlights: string[];
-  featured?: boolean;
-}
-
-interface Skills {
-  languages: string[];
-  frameworks: string[];
-  devops: string[];
-  tools: string[];
-}
-
-interface Achievement {
-  id: string;
-  title: string;
-  organization: string;
-  description: string;
-  date?: string;
-  link?: string;
-}
-
-interface Education {
-  id: string;
-  institution: string;
-  degree: string;
-  location: string;
-  period: string;
-  gpa?: string;
-  coursework?: string[];
+```json
+{
+  "personal": {
+    "name": "Professional Name",
+    "title": "Job Title",
+    "email": "email@example.com",
+    "phone": "+1234567890",
+    "location": "City, Country",
+    "summary": "Professional summary...",
+    "photo": "/images/profile.jpg"
+  },
+  "experience": [
+    {
+      "company": "Company Name",
+      "position": "Job Title",
+      "duration": "Start - End",
+      "description": "Job description...",
+      "technologies": ["Tech1", "Tech2"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Project Name",
+      "description": "Project description...",
+      "technologies": ["Tech1", "Tech2"],
+      "link": "https://project-url.com",
+      "github": "https://github.com/user/repo"
+    }
+  ],
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": ["JavaScript", "Python", "TypeScript"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University Name",
+      "degree": "Degree Type",
+      "field": "Field of Study",
+      "duration": "Start - End",
+      "gpa": "3.8/4.0"
+    }
+  ],
+  "achievements": [
+    "Achievement description..."
+  ],
+  "social": [
+    {
+      "platform": "LinkedIn",
+      "url": "https://linkedin.com/in/username"
+    }
+  ]
 }
 ```
 
-### Data Processing Utilities
+### Chat Context Formatting
+
+The system transforms `data.json` into LLM-friendly context:
 
 ```typescript
-// lib/cv-utils.ts
-export class CVDataProcessor {
-  static formatForLLM(cvData: CVData): string;
-  static formatDateRange(start: string, end: string): string;
-  static getCategorySkills(skills: Skills, category: string): string[];
-  static getFeaturedProjects(projects: Project[]): Project[];
-  static validateCVData(data: unknown): CVData;
+function formatPortfolioForLLM(data: PortfolioData): string {
+  return `
+You are an AI assistant representing ${data.personal.name}, a ${data.personal.title}.
+
+PERSONAL INFO:
+- Name: ${data.personal.name}
+- Title: ${data.personal.title}
+- Location: ${data.personal.location}
+- Summary: ${data.personal.summary}
+
+EXPERIENCE:
+${data.experience.map(exp => `
+- ${exp.position} at ${exp.company} (${exp.duration})
+  ${exp.description}
+  Technologies: ${exp.technologies.join(', ')}
+`).join('')}
+
+[Additional sections formatted similarly...]
+
+Please answer questions about this professional's background, experience, and skills based on this information.
+`;
 }
-```
-
-### Chat State Management
-
-```typescript
-// Using Vercel AI SDK
-interface ChatState {
-  messages: Message[];
-  input: string;
-  isLoading: boolean;
-  error?: Error;
-}
-
-// Automatic localStorage persistence
-// Conversation history maintained across sessions
-// Context injection for each request
 ```
 
 ## Error Handling
 
-### Error Categories and Responses
+### Client-Side Error Handling
 
-#### 1. API Errors
+#### Chat Interface Errors
+- **Network Failures**: Display retry button with exponential backoff
+- **API Errors**: Show user-friendly error messages
+- **Streaming Interruptions**: Allow message regeneration
+- **localStorage Issues**: Graceful degradation without persistence
 
+#### Portfolio Page Errors
+- **Data Loading Failures**: Show error boundary with reload option
+- **Image Loading Failures**: Fallback to placeholder images
+- **Navigation Issues**: Ensure basic functionality remains
+
+### Server-Side Error Handling
+
+#### API Route Error Responses
 ```typescript
-interface APIError {
-  code: 'RATE_LIMIT' | 'INVALID_KEY' | 'MODEL_UNAVAILABLE' | 'NETWORK_ERROR';
+// Error response format
+interface ErrorResponse {
+  error: string;
+  code: 'MISSING_ENV' | 'LLM_ERROR' | 'INVALID_REQUEST';
   message: string;
-  retryable: boolean;
 }
-
-// Error Handling Strategy:
-- Graceful degradation for LLM failures
-- User-friendly error messages
-- Automatic retry for transient errors
-- Fallback to different models when available
 ```
 
-#### 2. Data Validation Errors
-
+#### Environment Variable Validation
 ```typescript
-// CV Data Validation:
-- Schema validation on application startup
-- Graceful handling of missing optional fields
-- Default values for required fields
-- Error logging for debugging
-
-// User Input Validation:
-- Message length limits
-- Content filtering for inappropriate input
-- XSS prevention through sanitization
+function validateEnvironment(): void {
+  const required = ['LLM_API_KEY', 'LLM_MODEL', 'LLM_BASE_URL'];
+  const missing = required.filter(key => !process.env[key]);
+  
+  if (missing.length > 0) {
+    throw new Error(`Missing environment variables: ${missing.join(', ')}`);
+  }
+}
 ```
-
-#### 3. Client-Side Error Handling
-
-```typescript
-// React Error Boundaries:
-- Component-level error isolation
-- Fallback UI for broken components
-- Error reporting for debugging
-- Graceful recovery mechanisms
-
-// Network Error Handling:
-- Connection timeout handling
-- Offline state detection
-- Retry mechanisms with exponential backoff
-- User feedback for network issues
-```
-
-### Error Recovery Strategies
-
-1. **LLM Failures**: Fallback to different models, cached responses, or error messages
-2. **Data Loading**: Default to empty states with loading indicators
-3. **Network Issues**: Offline indicators with retry options
-4. **Component Crashes**: Error boundaries with reload options
 
 ## Testing Strategy
 
-### Testing Pyramid Approach
+### Unit Testing
+- **Data Loading Functions**: Test JSON parsing and validation
+- **Utility Functions**: Test data formatting and transformation
+- **Component Logic**: Test state management and user interactions
 
-#### 1. Unit Tests (Foundation)
+### Integration Testing
+- **API Routes**: Test chat endpoint with mock LLM responses
+- **Page Rendering**: Test SSR with various data configurations
+- **Client-Side Navigation**: Test routing between modes
 
-```typescript
-// Core Utilities Testing:
-- CV data processing functions
-- Date formatting utilities
-- Data validation logic
-- Error handling functions
-
-// Component Logic Testing:
-- Message formatting
-- State management
-- Event handlers
-- Conditional rendering
-```
-
-#### 2. Integration Tests (Middle Layer)
-
-```typescript
-// API Integration:
-- OpenRouter API communication
-- Chat endpoint functionality
-- Error response handling
-- Model switching behavior
-
-// Component Integration:
-- Chat interface with API
-- Portfolio data rendering
-- Navigation between modes
-- localStorage persistence
-```
-
-#### 3. End-to-End Tests (Top Layer)
-
-```typescript
-// User Journey Testing:
-- Complete chat conversations
-- Mode switching workflows
-- Portfolio browsing experience
-- Mobile responsiveness
-- Accessibility compliance
-```
-
-### Testing Tools and Configuration
-
-```typescript
-// Testing Stack:
-- Jest: Unit and integration testing
-- React Testing Library: Component testing
-- Playwright: E2E testing
-- MSW: API mocking for tests
-
-// Test Coverage Goals:
-- 80%+ coverage for utility functions
-- 70%+ coverage for components
-- 100% coverage for critical paths (chat, API)
-```
+### End-to-End Testing
+- **User Flows**: Test complete user journeys through both interfaces
+- **Responsive Design**: Test across different screen sizes
+- **Accessibility**: Test keyboard navigation and screen reader compatibility
 
 ### Performance Testing
+- **Load Times**: Ensure pages load within 2-second requirement
+- **Bundle Size**: Monitor JavaScript bundle size for chat functionality
+- **LLM Response Times**: Test streaming performance under load
 
-```typescript
-// Metrics to Monitor:
-- Time to First Contentful Paint (FCP)
-- Largest Contentful Paint (LCP)
-- First Input Delay (FID)
-- Cumulative Layout Shift (CLS)
-- API response times
-- Chat streaming latency
+## Deployment and Configuration
 
-// Performance Budgets:
-- Bundle size < 500KB
-- Initial page load < 2s
-- Chat response start < 1s
-- Portfolio navigation < 500ms
+### Environment Variables
+```bash
+# Required for chat functionality
+LLM_API_KEY=your_api_key_here
+LLM_MODEL=gpt-3.5-turbo  # or your preferred model
+LLM_BASE_URL=https://api.openai.com/v1  # or your LLM provider URL
+
+# Optional
+NEXT_PUBLIC_SITE_URL=https://yoursite.com
 ```
 
-### Accessibility Testing
+### Build Configuration
+- **Static Export**: Configure for static hosting if needed
+- **Image Optimization**: Set up Next.js image optimization
+- **Bundle Analysis**: Monitor bundle size and optimize imports
 
-```typescript
-// Automated Testing:
-- axe-core integration
-- Lighthouse accessibility audits
-- Color contrast validation
-- Keyboard navigation testing
-
-// Manual Testing:
-- Screen reader compatibility
-- Voice control testing
-- High contrast mode
-- Zoom functionality (up to 200%)
-```
-
-## Security Considerations
-
-### API Security
-
-```typescript
-// Environment Variables:
-- OPENROUTER_API_KEY: Server-side only
-- Rate limiting per IP address
-- Input sanitization for chat messages
-- CORS configuration for API routes
-
-// Request Validation:
-- Message length limits (max 1000 chars)
-- Content filtering for inappropriate input
-- Request frequency limiting
-- Authentication for sensitive operations
-```
-
-### Data Privacy
-
-```typescript
-// Data Handling:
-- No persistent storage of user conversations on server
-- localStorage data stays client-side
-- No personal data collection beyond CV content
-- GDPR compliance for EU visitors
-
-// Content Security:
-- CSP headers for XSS prevention
-- Sanitized HTML rendering
-- Safe external link handling
-- Image optimization and validation
-```
-
-## Deployment Architecture
-
-### Vercel Deployment Strategy
-
-```typescript
-// Build Configuration:
-- Static generation for portfolio pages
-- Server-side rendering for SEO
-- Edge functions for API routes
-- Automatic HTTPS and CDN
-
-// Environment Setup:
-- Production: vercel.com domain
-- Preview: Branch-based deployments
-- Development: Local with hot reload
-- Environment variable management
-```
-
-### Performance Optimizations
-
-```typescript
-// Next.js Optimizations:
-- Image optimization with next/image
-- Font optimization with next/font
-- Bundle splitting and code splitting
-- Static asset caching
-- Gzip compression
-
-// Runtime Optimizations:
-- React 19 concurrent features
-- Streaming for chat responses
-- Lazy loading for portfolio sections
-- Service worker for offline support
-```
-
-This design provides a comprehensive blueprint for implementing the AI Portfolio Chatbot with clear architectural decisions, detailed component specifications, robust error handling, and thorough testing strategies. The modular design ensures maintainability while the performance considerations guarantee a smooth user experience.
+### SEO Configuration
+- **Meta Tags**: Dynamic meta tags based on data.json
+- **Sitemap**: Auto-generated sitemap including all pages
+- **Structured Data**: JSON-LD markup for rich snippets
+- **Open Graph**: Social media preview optimization
