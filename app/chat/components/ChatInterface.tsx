@@ -7,19 +7,12 @@ import TypingIndicator from './TypingIndicator';
 import SuggestedQuestions from './SuggestedQuestions';
 import { useChatState } from '../hooks/useChatState';
 import { ConversationManager } from '../utils/conversationManager';
+import { generateSuggestedQuestions, getContextualQuestions } from '../utils/suggestedQuestions';
 import { PortfolioData } from '@/types/portfolio';
 
 interface ChatInterfaceProps {
   portfolioData: PortfolioData;
 }
-
-const SUGGESTED_QUESTIONS = [
-  "Tell me about your experience",
-  "What projects have you worked on?",
-  "What are your technical skills?",
-  "What's your educational background?",
-  "Tell me about your achievements"
-];
 
 export default function ChatInterface({ portfolioData }: ChatInterfaceProps) {
   const {
@@ -121,6 +114,11 @@ export default function ChatInterface({ portfolioData }: ChatInterfaceProps) {
     currentConversationId.current = ConversationManager.createNewConversation();
   };
 
+  // Generate dynamic suggested questions
+  const suggestedQuestions = !hasMessages 
+    ? generateSuggestedQuestions(portfolioData)
+    : getContextualQuestions(portfolioData, conversationHistory);
+
   return (
     <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900">
       {/* Chat Header */}
@@ -194,12 +192,13 @@ export default function ChatInterface({ portfolioData }: ChatInterfaceProps) {
         </div>
       )}
 
-      {/* Suggested Questions (only show when no messages) */}
-      {!hasMessages && (
+      {/* Suggested Questions */}
+      {suggestedQuestions.length > 0 && (
         <SuggestedQuestions
-          questions={SUGGESTED_QUESTIONS}
+          questions={suggestedQuestions}
           onQuestionClick={handleQuestionClick}
           disabled={isLoading}
+          showTitle={!hasMessages}
         />
       )}
 
