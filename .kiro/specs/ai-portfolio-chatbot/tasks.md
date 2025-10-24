@@ -36,7 +36,11 @@
   - Add professional header with contact information
   - _Requirements: 3.1, 3.2, 6.2_
 
-- [ ] 3.2 Add portfolio navigation and interactions
+- [x] 3.2 Add portfolio navigation and interactions
+
+
+
+
   - Implement smooth scroll navigation between sections
   - Add download CV functionality
   - Ensure responsive design across all screen sizes
