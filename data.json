@@ -1,0 +1,121 @@
+{
+  "personal": {
+    "name": "Alex Johnson",
+    "title": "Full Stack Developer",
+    "email": "alex.johnson@email.com",
+    "phone": "+1 (555) 123-4567",
+    "location": "San Francisco, CA",
+    "summary": "Passionate full stack developer with 5+ years of experience building scalable web applications. Specialized in React, Node.js, and cloud technologies with a focus on user experience and performance optimization.",
+    "photo": "/images/profile.jpg"
+  },
+  "experience": [
+    {
+      "company": "TechCorp Solutions",
+      "position": "Senior Full Stack Developer",
+      "duration": "2022 - Present",
+      "description": "Lead development of customer-facing web applications serving 100K+ users. Architected microservices infrastructure reducing response times by 40%. Mentored junior developers and established coding standards.",
+      "technologies": ["React", "Node.js", "TypeScript", "AWS", "PostgreSQL", "Docker"]
+    },
+    {
+      "company": "StartupXYZ",
+      "position": "Full Stack Developer",
+      "duration": "2020 - 2022",
+      "description": "Built MVP from ground up using modern web technologies. Implemented real-time features with WebSocket connections. Collaborated with design team to create responsive, accessible user interfaces.",
+      "technologies": ["React", "Express.js", "MongoDB", "Socket.io", "Tailwind CSS"]
+    },
+    {
+      "company": "Digital Agency Pro",
+      "position": "Frontend Developer",
+      "duration": "2019 - 2020",
+      "description": "Developed responsive websites for various clients. Optimized performance achieving 95+ Lighthouse scores. Integrated third-party APIs and payment systems.",
+      "technologies": ["JavaScript", "HTML5", "CSS3", "WordPress", "Stripe API"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "E-commerce Platform",
+      "description": "Full-featured e-commerce platform with real-time inventory management, payment processing, and admin dashboard. Supports multiple vendors and includes analytics.",
+      "technologies": ["Next.js", "Prisma", "PostgreSQL", "Stripe", "Tailwind CSS"],
+      "link": "https://ecommerce-demo.com",
+      "github": "https://github.com/alexjohnson/ecommerce-platform"
+    },
+    {
+      "name": "Task Management App",
+      "description": "Collaborative task management application with real-time updates, file attachments, and team workspaces. Features drag-and-drop interface and notification system.",
+      "technologies": ["React", "Node.js", "Socket.io", "MongoDB", "Material-UI"],
+      "link": "https://taskmanager-app.com",
+      "github": "https://github.com/alexjohnson/task-manager"
+    },
+    {
+      "name": "Weather Dashboard",
+      "description": "Interactive weather dashboard with location-based forecasts, historical data visualization, and severe weather alerts. Responsive design with dark/light themes.",
+      "technologies": ["Vue.js", "Chart.js", "OpenWeather API", "Vuetify"],
+      "link": "https://weather-dashboard-demo.com",
+      "github": "https://github.com/alexjohnson/weather-dashboard"
+    }
+  ],
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": ["JavaScript", "TypeScript", "Python", "Java", "SQL"]
+    },
+    {
+      "category": "Frontend Technologies",
+      "items": ["React", "Vue.js", "Next.js", "HTML5", "CSS3", "Tailwind CSS", "Material-UI"]
+    },
+    {
+      "category": "Backend Technologies",
+      "items": ["Node.js", "Express.js", "PostgreSQL", "MongoDB", "Redis", "GraphQL"]
+    },
+    {
+      "category": "Cloud & DevOps",
+      "items": ["AWS", "Docker", "Kubernetes", "CI/CD", "Terraform", "Nginx"]
+    },
+    {
+      "category": "Tools & Methodologies",
+      "items": ["Git", "Agile", "TDD", "REST APIs", "Microservices", "Performance Optimization"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of California, Berkeley",
+      "degree": "Bachelor of Science",
+      "field": "Computer Science",
+      "duration": "2015 - 2019",
+      "gpa": "3.8/4.0"
+    },
+    {
+      "institution": "FreeCodeCamp",
+      "degree": "Full Stack Web Development Certification",
+      "field": "Web Development",
+      "duration": "2018",
+      "gpa": null
+    }
+  ],
+  "achievements": [
+    "Led team that won 'Best Innovation' award at company hackathon 2023",
+    "Contributed to open source projects with 500+ GitHub stars",
+    "Speaker at React Conference 2022 - 'Building Scalable Component Libraries'",
+    "AWS Certified Solutions Architect - Associate",
+    "Mentored 10+ junior developers through coding bootcamp program",
+    "Published technical articles with 50K+ total views on Medium"
+  ],
+  "social": [
+    {
+      "platform": "LinkedIn",
+      "url": "https://linkedin.com/in/alexjohnson-dev"
+    },
+    {
+      "platform": "GitHub",
+      "url": "https://github.com/alexjohnson"
+    },
+    {
+      "platform": "Twitter",
+      "url": "https://twitter.com/alexjohnson_dev"
+    },
+    {
+      "platform": "Medium",
+      "url": "https://medium.com/@alexjohnson"
+    }
+  ]
+}
