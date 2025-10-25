@@ -11,27 +11,48 @@ export interface ChatMessageProps {
 }
 
 export default function ChatMessage({ message, isUser, timestamp, isStreaming = false }: ChatMessageProps) {
+  const messageId = `message-${timestamp.getTime()}`;
+  
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
-      <div className={`max-w-[80%] md:max-w-[70%] ${isUser ? 'order-2' : 'order-1'}`}>
+    <div 
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}
+      role="group"
+      aria-labelledby={messageId}
+    >
+      <div className={`max-w-[85%] sm:max-w-[80%] md:max-w-[70%] ${isUser ? 'order-2' : 'order-1'}`}>
         <div
           className={`
-            px-4 py-3 rounded-2xl shadow-sm
+            px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-sm
             ${isUser 
               ? 'bg-blue-500 text-white rounded-br-md' 
               : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-md'
             }
             ${isStreaming ? 'animate-pulse' : ''}
           `}
+          role={isUser ? "log" : "log"}
+          aria-live={isStreaming ? "polite" : "off"}
+          aria-label={isUser ? "Your message" : "AI assistant message"}
         >
-          <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+          <p 
+            id={messageId}
+            className="text-sm md:text-base leading-relaxed whitespace-pre-wrap"
+          >
             {message}
             {isStreaming && (
-              <span className="inline-block w-2 h-4 ml-1 bg-current animate-pulse">|</span>
+              <span 
+                className="inline-block w-2 h-4 ml-1 bg-current animate-pulse"
+                aria-label="AI is typing"
+                role="status"
+              >
+                |
+              </span>
             )}
           </p>
         </div>
-        <div className={`text-xs text-slate-500 dark:text-slate-400 mt-1 px-1 ${isUser ? 'text-right' : 'text-left'}`}>
+        <div 
+          className={`text-xs text-slate-500 dark:text-slate-400 mt-1 px-1 ${isUser ? 'text-right' : 'text-left'}`}
+          aria-label={`Message sent ${formatDistanceToNow(timestamp, { addSuffix: true })}`}
+        >
           {formatDistanceToNow(timestamp, { addSuffix: true })}
         </div>
       </div>

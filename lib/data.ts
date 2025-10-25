@@ -1,12 +1,30 @@
 import { PortfolioData, ChatMessage } from '@/types/portfolio';
+import { validatePortfolioData, safeDataLoad, DataLoadError } from './graceful-degradation';
 import portfolioData from '@/data.json';
 
 /**
- * Load portfolio data from the JSON file
+ * Load portfolio data from the JSON file with error handling and validation
  * This serves as the single source of truth for all portfolio information
  */
 export function getPortfolioData(): PortfolioData {
-  return portfolioData as PortfolioData;
+  try {
+    // Validate and sanitize the loaded data
+    return validatePortfolioData(portfolioData);
+  } catch (error) {
+    console.error('Failed to load portfolio data:', error);
+    throw new DataLoadError('Portfolio data could not be loaded', 'portfolio', error instanceof Error ? error : new Error(String(error)));
+  }
+}
+
+/**
+ * Safely load portfolio data with fallback handling
+ */
+export async function safeGetPortfolioData(): Promise<PortfolioData> {
+  return safeDataLoad(
+    () => getPortfolioData(),
+    validatePortfolioData({}), // Use default fallback data
+    (error) => console.warn('Using fallback portfolio data due to error:', error.message)
+  );
 }
 
 /**

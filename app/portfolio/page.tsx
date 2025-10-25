@@ -1,9 +1,20 @@
 import Link from "next/link";
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { getPortfolioData } from "@/lib/data";
 import { ExperienceItem, ProjectItem, Achievement, EducationItem } from "@/types/portfolio";
-import PortfolioNavigation from "./components/PortfolioNavigation";
-import CVDownload from "./components/CVDownload";
+import LazyWrapper from "@/app/components/LazyWrapper";
+import Navigation from "@/app/components/Navigation";
+
+// Lazy load components for better performance
+const PortfolioNavigation = dynamic(() => import("./components/PortfolioNavigation"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const CVDownload = dynamic(() => import("./components/CVDownload"), {
+  ssr: true,
+});
 
 const portfolioData = getPortfolioData();
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localhost:3000';
@@ -177,17 +188,11 @@ export default function Portfolio() {
 
             {/* Navigation and Actions */}
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 sm:gap-4 lg:gap-3 w-full sm:w-auto lg:w-auto">
-              <Link 
-                href="/"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-lg transition-colors"
-                aria-label="Return to homepage"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                <span className="hidden sm:inline">Back to Home</span>
-                <span className="sm:hidden">Home</span>
-              </Link>
+              <Navigation 
+                portfolioData={portfolioData} 
+                variant="minimal" 
+                showModeToggle={true}
+              />
               <CVDownload portfolioData={portfolioData} />
             </div>
           </div>
@@ -195,13 +200,13 @@ export default function Portfolio() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
+      <main id="main-content" className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl" role="main">
         {/* Experience Section */}
-        <section id="experience" className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Experience</h2>
-          <div className="space-y-8">
+        <section id="experience" className="mb-16" aria-labelledby="experience-heading">
+          <h2 id="experience-heading" className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Experience</h2>
+          <div className="space-y-6 sm:space-y-8 stagger-animation">
             {portfolioData.experiences.map((experience: ExperienceItem) => (
-              <div key={experience.id} className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div key={experience.id} className="bg-white dark:bg-slate-800 rounded-lg p-4 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-700 card-hover-effect">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
                   <div>
                     <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-1">
@@ -254,11 +259,11 @@ export default function Portfolio() {
         </section>
    
      {/* Projects Section */}
-        <section id="projects" className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Projects</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+        <section id="projects" className="mb-16" aria-labelledby="projects-heading">
+          <h2 id="projects-heading" className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 stagger-animation">
             {portfolioData.projects.map((project: ProjectItem) => (
-              <div key={project.id} className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+              <div key={project.id} className="bg-white dark:bg-slate-800 rounded-lg p-4 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow card-hover-effect">
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
                     {project.name}
@@ -333,8 +338,8 @@ export default function Portfolio() {
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Skills</h2>
+        <section id="skills" className="mb-16" aria-labelledby="skills-heading">
+          <h2 id="skills-heading" className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Skills</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-slate-200 dark:border-slate-700">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
@@ -404,8 +409,8 @@ export default function Portfolio() {
         </section>
 
         {/* Education Section */}
-        <section id="education" className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Education</h2>
+        <section id="education" className="mb-16" aria-labelledby="education-heading">
+          <h2 id="education-heading" className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Education</h2>
           <div className="space-y-6">
             {portfolioData.education.map((education: EducationItem) => (
               <div key={education.id} className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-slate-200 dark:border-slate-700">
@@ -444,8 +449,8 @@ export default function Portfolio() {
         </section>
 
         {/* Achievements Section */}
-        <section id="achievements" className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Achievements</h2>
+        <section id="achievements" className="mb-16" aria-labelledby="achievements-heading">
+          <h2 id="achievements-heading" className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Achievements</h2>
           <div className="space-y-6">
             {portfolioData.achievements.map((achievement: Achievement) => (
               <div key={achievement.id} className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-slate-200 dark:border-slate-700">
@@ -490,6 +495,12 @@ export default function Portfolio() {
 
       {/* Portfolio Navigation */}
       <PortfolioNavigation />
+      
+      {/* Floating Navigation */}
+      <Navigation 
+        portfolioData={portfolioData} 
+        variant="floating" 
+      />
       </div>
     </>
   );

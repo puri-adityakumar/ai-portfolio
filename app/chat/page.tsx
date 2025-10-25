@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { getPortfolioData } from "@/lib/data";
 import ChatInterface from "./components/ChatInterface";
+import Navigation from "@/app/components/Navigation";
 
 const portfolioData = getPortfolioData();
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localhost:3000';
@@ -47,33 +48,30 @@ export default function Chat() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Navigation Header */}
-      <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4">
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4" role="banner">
         <div className="container mx-auto flex items-center justify-between">
-          <Link 
-            href="/"
-            className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Home
-          </Link>
+          <Navigation 
+            portfolioData={portfolioData} 
+            variant="minimal" 
+            showModeToggle={true}
+          />
           <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
             Chat with AI
           </h1>
-          <Link 
-            href="/portfolio"
-            className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-          >
-            View Portfolio
-          </Link>
+          <div className="w-24" /> {/* Spacer for balance */}
         </div>
-      </div>
+      </header>
 
       {/* Chat Interface */}
-      <div className="container mx-auto max-w-4xl" style={{ height: 'calc(100vh - 80px)' }}>
+      <main id="main-content" className="container mx-auto max-w-4xl" style={{ height: 'calc(100vh - 80px)' }} role="main">
         <ChatInterface portfolioData={portfolioData} />
-      </div>
+      </main>
+      
+      {/* Floating Navigation */}
+      <Navigation 
+        portfolioData={portfolioData} 
+        variant="floating" 
+      />
     </div>
   );
 }

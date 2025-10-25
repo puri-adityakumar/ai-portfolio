@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:build": "node scripts/test-build.js",
+    "validate:env": "npx tsx lib/env-validation.ts",
+    "build:analyze": "ANALYZE=true npm run build",
+    "build:standalone": "BUILD_STANDALONE=true npm run build"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -22,6 +26,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
