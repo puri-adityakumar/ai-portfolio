@@ -21,6 +21,7 @@ export default function ChatInterface({ portfolioData }: ChatInterfaceProps) {
     isTyping,
     error,
     addMessage,
+    updateMessage,
     setLoading,
     setTyping,
     setError,
@@ -79,15 +80,91 @@ export default function ChatInterface({ portfolioData }: ChatInterfaceProps) {
         ConversationManager.truncateConversationHistory(conversationHistory)
       );
 
-      // TODO: This will be implemented in task 5.1 - Create chat API route
-      // For now, we'll simulate a response with better state management
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Add AI response
-      addMessage({
-        message: "Thank you for your message! The AI chat functionality will be implemented in the next phase of development. For now, you can explore my portfolio in the traditional format.",
+      // Create AI message placeholder for streaming
+      const aiMessage = addMessage({
+        message: '',
         isUser: false,
+        isStreaming: true,
       });
+
+      // Make streaming request to chat API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message,
+          conversationHistory: historyForLLM,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body available');
+      }
+
+      const decoder = new TextDecoder();
+      let accumulatedContent = '';
+
+      // Stop typing indicator once streaming starts
+      setTyping(false);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) {
+          break;
+        }
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            
+            if (data === '[DONE]') {
+              continue;
+            }
+
+            try {
+              const parsed = JSON.parse(data);
+              
+              if (parsed.error) {
+                throw new Error(parsed.error);
+              }
+
+              if (parsed.content) {
+                accumulatedContent += parsed.content;
+                
+                // Update the AI message with accumulated content
+                updateMessage(aiMessage.id, {
+                  message: accumulatedContent,
+                  isStreaming: !parsed.done,
+                });
+              }
+
+              if (parsed.done) {
+                // Finalize the message
+                updateMessage(aiMessage.id, {
+                  message: accumulatedContent,
+                  isStreaming: false,
+                });
+                break;
+              }
+            } catch (parseError) {
+              // Skip invalid JSON chunks
+              continue;
+            }
+          }
+        }
+      }
 
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -178,6 +255,7 @@ export default function ChatInterface({ portfolioData }: ChatInterfaceProps) {
             message={msg.message}
             isUser={msg.isUser}
             timestamp={msg.timestamp}
+            isStreaming={msg.isStreaming}
           />
         ))}
 
