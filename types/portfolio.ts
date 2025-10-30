@@ -98,7 +98,7 @@ export interface ChatResponse {
 // API error response interface
 export interface ErrorResponse {
   error: string;
-  code: 'MISSING_ENV' | 'LLM_ERROR' | 'INVALID_REQUEST' | 'DATA_LOAD_ERROR';
+  code: 'MISSING_ENV' | 'LLM_ERROR' | 'INVALID_REQUEST' | 'DATA_LOAD_ERROR' | 'INTERNAL_ERROR';
   message: string;
 }
 
