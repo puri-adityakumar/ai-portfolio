@@ -8,7 +8,6 @@ import Navigation from "@/app/components/Navigation";
 
 // Lazy load components for better performance
 const PortfolioNavigation = dynamic(() => import("./components/PortfolioNavigation"), {
-  ssr: false,
   loading: () => null,
 });
 

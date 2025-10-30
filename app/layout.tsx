@@ -4,8 +4,6 @@ import "./globals.css";
 import { getPortfolioData } from "@/lib/data";
 import { generatePersonStructuredData, generateWebsiteStructuredData } from "@/lib/seo";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
-import UserFlowTest from "@/app/components/UserFlowTest";
-import ResponsiveTest from "@/app/components/ResponsiveTest";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -144,8 +142,6 @@ export default function RootLayout({
         <ErrorBoundary>
           {children}
         </ErrorBoundary>
-        <UserFlowTest />
-        <ResponsiveTest />
       </body>
     </html>
   );

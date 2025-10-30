@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:build": "node scripts/test-build.js",
     "validate:env": "npx tsx lib/env-validation.ts",
     "build:analyze": "ANALYZE=true npm run build",
     "build:standalone": "BUILD_STANDALONE=true npm run build"
