@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
 import "./globals.css";
 import { getPortfolioData } from "@/lib/data";
 import { generatePersonStructuredData, generateWebsiteStructuredData } from "@/lib/seo";
@@ -122,7 +121,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${GeistSans.className} ${GeistMono.variable} antialiased`}
+        className={`${GeistSans.className} antialiased`}
       >
         <a
           href="#main-content"

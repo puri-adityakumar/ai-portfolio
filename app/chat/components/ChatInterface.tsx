@@ -1,14 +1,13 @@
 'use client';
 
-import { useRef, useEffect, useCallback, useMemo } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
+import Link from 'next/link';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import TypingIndicator from './TypingIndicator';
-import SuggestedQuestions from './SuggestedQuestions';
 import ChatErrorHandler, { useChatError } from './ChatErrorHandler';
 import { useChatState } from '../hooks/useChatState';
 import { ConversationManager } from '../utils/conversationManager';
-import { generateSuggestedQuestions, getContextualQuestions } from '../utils/suggestedQuestions';
 import { PortfolioData } from '@/types/portfolio';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { usePerformance, useRenderPerformance } from '@/app/hooks/usePerformance';
@@ -34,7 +33,7 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
     conversationHistory,
   } = useChatState();
 
-  const { handleError, clearError } = useChatError();
+  const { handleError } = useChatError();
 
   // Performance monitoring
   const { measureInteraction } = usePerformance();
@@ -43,6 +42,9 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const currentConversationId = useRef<string | null>(null);
+  const currentReaderRef = useRef<ReadableStreamDefaultReader | null>(null);
+  const stopRequestedRef = useRef(false);
+  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
 
   // Initialize conversation ID
   useEffect(() => {
@@ -62,6 +64,21 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping, scrollToBottom]);
+
+  // Track scroll position for scroll-to-bottom button
+  useEffect(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+      setShowScrollToBottom(distanceFromBottom > 160);
+    };
+
+    el.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Save conversation whenever messages change
   useEffect(() => {
@@ -130,7 +147,13 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
       // Stop typing indicator once streaming starts
       setTyping(false);
 
+      currentReaderRef.current = reader;
+
       while (true) {
+        if (stopRequestedRef.current) {
+          try { await reader.cancel(); } catch {}
+          break;
+        }
         const { done, value } = await reader.read();
         
         if (done) {
@@ -198,15 +221,13 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
     } finally {
       setLoading(false);
       setTyping(false);
+      stopRequestedRef.current = false;
+      currentReaderRef.current = null;
       
       // Measure interaction performance
       measureInteraction('send-message', startTime);
     }
   };
-
-  const handleQuestionClick = useCallback((question: string) => {
-    handleSendMessage(question);
-  }, [handleSendMessage]);
 
   const handleClearChat = useCallback(() => {
     clearChat();
@@ -214,19 +235,21 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
     currentConversationId.current = ConversationManager.createNewConversation();
   }, [clearChat]);
 
-  // Generate dynamic suggested questions (memoized for performance)
-  const suggestedQuestions = useMemo(() => {
-    return !hasMessages 
-      ? generateSuggestedQuestions(portfolioData)
-      : getContextualQuestions(portfolioData, conversationHistory);
-  }, [hasMessages, portfolioData, conversationHistory]);
-
   const handleRetryLastMessage = useCallback(() => {
     const lastUserMessage = messages.filter(m => m.isUser).pop();
     if (lastUserMessage) {
       handleSendMessage(lastUserMessage.message);
     }
   }, [messages, handleSendMessage]);
+
+  const handleStop = useCallback(() => {
+    stopRequestedRef.current = true;
+    if (currentReaderRef.current) {
+      try { currentReaderRef.current.cancel(); } catch {}
+    }
+    setTyping(false);
+    setLoading(false);
+  }, [setTyping, setLoading]);
 
   return (
     <div className="flex flex-col h-full">
@@ -241,28 +264,40 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
         {isLoading && "AI is responding to your message"}
       </div>
       {/* Chat Header */}
-      <header className="glass border-b border-white/10 p-4 sm:p-6 relative overflow-hidden animate-fade-in" role="banner">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-50" />
+      <header className="sticky top-0 bg-white/[0.08] backdrop-blur-md border-b border-white/15 px-4 sm:px-6 py-4 relative overflow-hidden animate-fade-in z-10" role="banner">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/[0.04] via-blue-500/[0.04] to-indigo-500/[0.04]" />
         <div className="flex items-center justify-between relative z-10">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 glass-strong rounded-2xl flex items-center justify-center glow-blue" aria-hidden="true">
-              <svg className="w-6 h-6 text-gradient-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 h-9 min-w-[72px] px-3 rounded-md bg-white/10 border border-white/20 text-white hover:bg-white/15 transition-colors focus:outline-none focus:ring-1 focus:ring-white/30 select-none"
+              aria-label="Return to homepage"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span className="text-sm leading-none">Back</span>
+            </Link>
+            <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/20" aria-hidden="true">
+              <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <h2 className="font-semibold text-white text-lg">
+              <h2 className="font-medium text-white text-base tracking-tight">
                 AI Assistant
               </h2>
-              <p className="text-sm text-white/50">
-                Ask me about <span className="text-gradient-accent font-medium">{portfolioData.profile.name}</span>'s experience
+              <p className="text-xs text-white/40 font-light">
+                Ask about <span className="text-white/60">{portfolioData.profile.name}</span>'s experience
               </p>
+            </div>
             </div>
           </div>
           {hasMessages && (
             <button
               onClick={handleClearChat}
-              className="text-sm text-white/50 hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg px-3 py-2 glass-strong hover:glass-hover hover:scale-105"
+              className="text-xs text-white hover:text-white transition-all focus:outline-none focus:ring-1 focus:ring-white/30 rounded-lg px-3 py-2 bg-white/10 hover:bg-white/15 border border-white/20 font-light"
               aria-label="Clear all chat messages and start a new conversation"
             >
               <span className="hidden sm:inline">Clear Chat</span>
@@ -277,7 +312,7 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
       {/* Messages Container */}
       <div 
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 chat-container chat-scroll"
+        className="flex-1 overflow-y-auto p-4 space-y-4 chat-container chat-scroll relative"
         style={{ maxHeight: 'calc(100vh - 200px)' }}
         role="log"
         aria-live="polite"
@@ -285,17 +320,17 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
         tabIndex={0}
       >
         {!hasMessages && (
-          <div className="text-center py-8 animate-fade-in">
-            <div className="w-16 h-16 mx-auto mb-4 glass-strong rounded-full flex items-center justify-center glow-purple">
-              <svg className="w-8 h-8 text-gradient-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="text-center py-12 sm:py-16 animate-fade-in">
+            <div className="w-14 h-14 mx-auto mb-6 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20">
+              <svg className="w-7 h-7 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">
-              Welcome to the AI Chat!
+            <h3 className="text-lg font-medium text-white mb-3 tracking-tight">
+              Start a Conversation
             </h3>
-            <p className="text-white/50 mb-6 max-w-md mx-auto">
-              Ask me anything about <span className="text-gradient-accent">{portfolioData.profile.name}</span>'s professional background, projects, or skills.
+            <p className="text-white/40 mb-6 max-w-md mx-auto text-sm font-light leading-relaxed">
+              Ask about <span className="text-white/60">{portfolioData.profile.name}</span>'s professional background, projects, or technical expertise.
             </p>
           </div>
         )}
@@ -319,23 +354,24 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
 
         {isTyping && <TypingIndicator />}
         <div ref={messagesEndRef} />
+
+        {showScrollToBottom && (
+          <button
+            type="button"
+            onClick={scrollToBottom}
+            className="absolute bottom-2 right-2 md:bottom-4 md:right-4 px-3 py-2 rounded-lg bg-white/15 border border-white/25 text-white hover:bg-white/20 shadow-md focus:outline-none focus:ring-1 focus:ring-white/30"
+            aria-label="Scroll to bottom"
+          >
+            ↓
+          </button>
+        )}
       </div>
 
       {/* Error Display */}
       {error && (
-        <div className="px-4 py-2 glass-strong border-l-4 border-red-500/50">
-          <p className="text-sm text-red-400">{error}</p>
+        <div className="px-5 py-3 bg-red-500/5 backdrop-blur-sm border-l-2 border-red-500/30">
+          <p className="text-sm text-red-300/90 font-light">{error}</p>
         </div>
-      )}
-
-      {/* Suggested Questions */}
-      {suggestedQuestions.length > 0 && (
-        <SuggestedQuestions
-          questions={suggestedQuestions}
-          onQuestionClick={handleQuestionClick}
-          disabled={isLoading}
-          showTitle={!hasMessages}
-        />
       )}
 
       {/* Chat Input */}
@@ -343,6 +379,9 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
         onSendMessage={handleSendMessage}
         disabled={isLoading}
         placeholder={isLoading ? "AI is responding..." : "Type your message..."}
+        isLoading={isLoading}
+        onStop={handleStop}
+        onRetry={hasMessages ? handleRetryLastMessage : undefined}
       />
     </div>
   );

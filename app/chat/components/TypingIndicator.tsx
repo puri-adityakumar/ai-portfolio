@@ -2,17 +2,16 @@
 
 export default function TypingIndicator() {
   return (
-    <div className="flex justify-start mb-4 animate-message-slide-in">
-      <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[70%]">
-        <div className="glass px-3 sm:px-4 py-2 sm:py-3 rounded-2xl rounded-bl-md shadow-lg border border-purple-500/30 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-indigo-500/10 pointer-events-none" />
-          <div className="flex items-center space-x-2 relative z-10">
-            <div className="flex space-x-1">
-              <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+    <div className="flex justify-start mb-6 animate-message-slide-in">
+      <div className="max-w-[85%] sm:max-w-[75%] md:max-w-[65%]">
+        <div className="bg-white/[0.08] backdrop-blur-md px-4 sm:px-5 py-3 sm:py-4 rounded-xl shadow-md border border-white/15 relative overflow-hidden">
+          <div className="flex items-center space-x-2">
+            <div className="flex space-x-1.5">
+              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce"></div>
+              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
             </div>
-            <span className="text-xs text-white/50 ml-2">AI is typing...</span>
+            <span className="text-xs text-white/50 ml-2 font-light">AI is typing...</span>
           </div>
         </div>
       </div>

@@ -10,10 +10,14 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-mono: var(--font-geist-mono);
 }
 
 /* Enhanced black noisy gradient background with vibrant accents */
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   background: #000000;
   background-image: 
@@ -29,6 +33,8 @@ body {
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body::before {
@@ -130,7 +136,7 @@ body::before {
 
 /* Vercel-inspired gradient text */
 .text-gradient {
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.6) 100%);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.85) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -552,4 +558,51 @@ img {
   100% {
     transform: translate(0, 0);
   }
+}
+
+
+/* Glass card with blue hover */
+.glass-card-blue {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.glass-card-blue:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 
+    0 12px 40px 0 rgba(239, 68, 68, 0.4),
+    0 0 0 1px rgba(239, 68, 68, 0.3) inset,
+    0 0 40px rgba(239, 68, 68, 0.25);
+  transform: translateY(-4px);
+}
+
+/* Glass card with red hover */
+.glass-card-red {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.glass-card-red:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 12px 40px 0 rgba(59, 130, 246, 0.4),
+    0 0 0 1px rgba(59, 130, 246, 0.3) inset,
+    0 0 40px rgba(59, 130, 246, 0.25);
+  transform: translateY(-4px);
 }

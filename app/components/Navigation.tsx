@@ -122,7 +122,7 @@ export default function Navigation({
                 className="text-sm text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
                 aria-label="Navigate to AI chat interface"
               >
-                Chat with AI
+                Chat
               </Link>
             )}
           </>

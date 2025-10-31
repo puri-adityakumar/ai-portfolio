@@ -105,8 +105,8 @@ export function generateSuggestedQuestions(portfolioData: PortfolioData): string
     }
   }
   
-  // Limit to 6-8 questions to avoid overwhelming the user
-  return questions.slice(0, 8);
+  // Limit to 4 questions for a cleaner interface
+  return questions.slice(0, 4);
 }
 
 /**
@@ -193,5 +193,5 @@ export function getContextualQuestions(
     }
   }
   
-  return questions.slice(0, 5); // Limit contextual questions
+  return questions.slice(0, 4); // Limit contextual questions
 }
