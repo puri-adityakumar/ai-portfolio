@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import "./globals.css";
 import { getPortfolioData } from "@/lib/data";
 import { generatePersonStructuredData, generateWebsiteStructuredData } from "@/lib/seo";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 // Load portfolio data with error handling
 let portfolioData;
@@ -126,7 +122,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.className} antialiased`}
+        className={`${GeistSans.className} ${GeistMono.variable} antialiased`}
       >
         <a
           href="#main-content"

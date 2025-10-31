@@ -10,7 +10,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-mono: var(--font-google-sans-code);
+  --font-mono: var(--font-geist-mono);
 }
 
 /* Enhanced black noisy gradient background with vibrant accents */
@@ -26,7 +26,7 @@ body {
   background-size: cover;
   background-attachment: fixed;
   color: var(--foreground);
-  font-family: var(--font-google-sans-code), monospace;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   position: relative;
 }
