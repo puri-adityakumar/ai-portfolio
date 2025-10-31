@@ -43,7 +43,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${portfolioData.profile.name} - ${portfolioData.profile.title}`,
+    default: portfolioData.profile.name,
     template: `%s | ${portfolioData.profile.name}`,
   },
   description: portfolioData.profile.bio,
@@ -77,21 +77,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: `${portfolioData.profile.name} - Portfolio`,
-    title: `${portfolioData.profile.name} - ${portfolioData.profile.title}`,
+    siteName: portfolioData.profile.name,
+    title: portfolioData.profile.name,
     description: portfolioData.profile.bio,
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: `${portfolioData.profile.name} - ${portfolioData.profile.title}`,
+        alt: portfolioData.profile.name,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${portfolioData.profile.name} - ${portfolioData.profile.title}`,
+    title: portfolioData.profile.name,
     description: portfolioData.profile.bio,
     images: ['/og-image.jpg'],
     creator: portfolioData.profile.linkedin ? `@${portfolioData.profile.linkedin}` : undefined,

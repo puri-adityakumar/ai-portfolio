@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   const portfolioData = getPortfolioData()
   
   return {
-    name: `${portfolioData.profile.name} - Portfolio`,
+    name: portfolioData.profile.name,
     short_name: portfolioData.profile.name,
     description: portfolioData.profile.bio,
     start_url: '/',
