@@ -119,13 +119,21 @@ export default function Portfolio() {
           __html: JSON.stringify(portfolioStructuredData),
         }}
       />
-      <div className="min-h-screen relative">
-        {/* Background gradient overlay */}
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Enhanced background gradient overlay with animated gradients */}
         <div className="fixed inset-0 bg-gradient-to-br from-black via-black to-black/95 pointer-events-none" />
         
+        {/* Animated gradient orbs */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" style={{ animation: 'pulse 8s infinite, orb-float 20s infinite' }} />
+          <div className="absolute top-1/4 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" style={{ animation: 'pulse 10s infinite 2s, orb-float 25s infinite 5s' }} />
+          <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" style={{ animation: 'pulse 12s infinite 4s, orb-float 30s infinite 10s' }} />
+        </div>
+        
         {/* Professional Header */}
-        <header className="relative z-10 glass border-b border-white/10">
-          <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <header className="relative z-10 glass border-b border-white/10 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-50" />
+          <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 relative z-10">
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6">
               {/* Profile Info */}
               <div className="flex-1 text-center lg:text-left">

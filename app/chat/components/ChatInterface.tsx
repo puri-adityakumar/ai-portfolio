@@ -241,31 +241,34 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
         {isLoading && "AI is responding to your message"}
       </div>
       {/* Chat Header */}
-      <header className="glass border-b border-white/10 p-4 relative overflow-hidden" role="banner">
+      <header className="glass border-b border-white/10 p-4 sm:p-6 relative overflow-hidden animate-fade-in" role="banner">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-50" />
         <div className="flex items-center justify-between relative z-10">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 glass-strong rounded-full flex items-center justify-center glow-blue" aria-hidden="true">
+            <div className="w-12 h-12 glass-strong rounded-2xl flex items-center justify-center glow-blue" aria-hidden="true">
               <svg className="w-6 h-6 text-gradient-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <h2 className="font-semibold text-white">
+              <h2 className="font-semibold text-white text-lg">
                 AI Assistant
               </h2>
               <p className="text-sm text-white/50">
-                Ask me about <span className="text-gradient-accent">{portfolioData.profile.name}</span>'s experience
+                Ask me about <span className="text-gradient-accent font-medium">{portfolioData.profile.name}</span>'s experience
               </p>
             </div>
           </div>
           {hasMessages && (
             <button
               onClick={handleClearChat}
-              className="text-sm text-white/50 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1 glass-strong hover:bg-white/10"
+              className="text-sm text-white/50 hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg px-3 py-2 glass-strong hover:glass-hover hover:scale-105"
               aria-label="Clear all chat messages and start a new conversation"
             >
-              Clear Chat
+              <span className="hidden sm:inline">Clear Chat</span>
+              <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
             </button>
           )}
         </div>

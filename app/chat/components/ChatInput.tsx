@@ -30,7 +30,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="border-t border-white/10 glass p-3 sm:p-4 relative overflow-hidden" role="region" aria-label="Message input">
+    <div className="border-t border-white/10 glass p-3 sm:p-4 md:p-6 relative overflow-hidden" role="region" aria-label="Message input">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-50" />
       <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="relative z-10">
         <div className="flex items-end space-x-2 sm:space-x-3">
@@ -49,11 +49,12 @@ export default function ChatInput({
               aria-describedby="message-help"
               className="
                 w-full px-3 sm:px-4 py-2 sm:py-3 rounded-2xl border border-white/20 
-                glass text-white
+                glass text-white shadow-lg
                 placeholder-white/40
-                focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30
+                focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500/30
                 resize-none min-h-[48px] max-h-32
                 disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-200
               "
               style={{
                 height: 'auto',
@@ -74,16 +75,17 @@ export default function ChatInput({
             onClick={handleSend}
             disabled={disabled || !message.trim()}
             className="
-              p-3 rounded-full glass-strong text-white hover:bg-white/10
+              p-3 sm:p-4 rounded-2xl glass-strong text-white hover:bg-white/10
               disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white/5
-              transition-all duration-200 flex-shrink-0
-              focus:outline-none focus:ring-2 focus:ring-white/20
+              transition-all duration-300 flex-shrink-0
+              focus:outline-none focus:ring-2 focus:ring-purple-500/30
               hover:scale-110 active:scale-95
-              glow-blue hover:glow-purple
+              glow-blue hover:glow-purple shadow-lg
+              border border-white/10 hover:border-purple-500/30
             "
             aria-label={disabled ? "Please wait, message is being sent" : "Send message"}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
           </button>
