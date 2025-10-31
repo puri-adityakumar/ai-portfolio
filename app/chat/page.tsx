@@ -46,16 +46,19 @@ export const metadata: Metadata = {
 
 export default function Chat() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen relative">
+      {/* Background gradient overlay */}
+      <div className="fixed inset-0 bg-gradient-to-br from-black via-black to-black/95 pointer-events-none" />
+      
       {/* Navigation Header */}
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4" role="banner">
+      <header className="relative z-10 glass border-b border-white/10 p-4" role="banner">
         <div className="container mx-auto flex items-center justify-between">
           <Navigation 
             portfolioData={portfolioData} 
             variant="minimal" 
             showModeToggle={true}
           />
-          <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
+          <h1 className="text-xl font-semibold text-white">
             Chat with AI
           </h1>
           <div className="w-24" /> {/* Spacer for balance */}
@@ -63,7 +66,7 @@ export default function Chat() {
       </header>
 
       {/* Chat Interface */}
-      <main id="main-content" className="container mx-auto max-w-4xl" style={{ height: 'calc(100vh - 80px)' }} role="main">
+      <main id="main-content" className="relative z-10 container mx-auto max-w-4xl" style={{ height: 'calc(100vh - 80px)' }} role="main">
         <ChatInterface portfolioData={portfolioData} />
       </main>
       

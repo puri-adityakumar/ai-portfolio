@@ -229,7 +229,7 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
   }, [messages, handleSendMessage]);
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900">
+    <div className="flex flex-col h-full">
       {/* Screen reader announcements */}
       <div 
         aria-live="assertive" 
@@ -241,27 +241,28 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
         {isLoading && "AI is responding to your message"}
       </div>
       {/* Chat Header */}
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4" role="banner">
-        <div className="flex items-center justify-between">
+      <header className="glass border-b border-white/10 p-4 relative overflow-hidden" role="banner">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-50" />
+        <div className="flex items-center justify-between relative z-10">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center" aria-hidden="true">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            <div className="w-10 h-10 glass-strong rounded-full flex items-center justify-center glow-blue" aria-hidden="true">
+              <svg className="w-6 h-6 text-gradient-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <h2 className="font-semibold text-slate-900 dark:text-white">
+              <h2 className="font-semibold text-white">
                 AI Assistant
               </h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Ask me about {portfolioData.profile.name}'s experience
+              <p className="text-sm text-white/50">
+                Ask me about <span className="text-gradient-accent">{portfolioData.profile.name}</span>'s experience
               </p>
             </div>
           </div>
           {hasMessages && (
             <button
               onClick={handleClearChat}
-              className="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+              className="text-sm text-white/50 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1 glass-strong hover:bg-white/10"
               aria-label="Clear all chat messages and start a new conversation"
             >
               Clear Chat
@@ -282,16 +283,16 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
       >
         {!hasMessages && (
           <div className="text-center py-8 animate-fade-in">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            <div className="w-16 h-16 mx-auto mb-4 glass-strong rounded-full flex items-center justify-center glow-purple">
+              <svg className="w-8 h-8 text-gradient-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-lg font-semibold text-white mb-2">
               Welcome to the AI Chat!
             </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
-              Ask me anything about {portfolioData.profile.name}'s professional background, projects, or skills.
+            <p className="text-white/50 mb-6 max-w-md mx-auto">
+              Ask me anything about <span className="text-gradient-accent">{portfolioData.profile.name}</span>'s professional background, projects, or skills.
             </p>
           </div>
         )}
@@ -319,8 +320,8 @@ function ChatInterfaceInner({ portfolioData }: ChatInterfaceProps) {
 
       {/* Error Display */}
       {error && (
-        <div className="px-4 py-2 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500">
-          <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+        <div className="px-4 py-2 glass-strong border-l-4 border-red-500/50">
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 

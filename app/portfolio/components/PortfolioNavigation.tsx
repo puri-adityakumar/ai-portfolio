@@ -157,16 +157,16 @@ export default function PortfolioNavigation() {
         aria-label="Portfolio section navigation"
         role="navigation"
       >
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-2">
+        <div className="glass rounded-lg shadow-lg border border-white/10 p-2">
           <div className="space-y-1">
             {navigationItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 ${
+                className={`flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 hover:scale-105 hover:bg-white/10 hover:shadow-md ${
                   activeSection === item.id
-                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
+                    ? 'glass-strong text-gradient-accent'
+                    : 'text-white/60 hover:text-white'
                 }`}
                 title={`Navigate to ${item.label} section`}
                 aria-label={`Navigate to ${item.label} section`}
@@ -188,16 +188,16 @@ export default function PortfolioNavigation() {
         aria-label="Portfolio section navigation"
         role="navigation"
       >
-        <div className="bg-white dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 px-3 sm:px-4 py-2">
+        <div className="glass rounded-full shadow-lg border border-white/10 px-3 sm:px-4 py-2">
           <div className="flex items-center gap-1">
             {navigationItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 ${
+                className={`p-2 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 hover:scale-110 ${
                   activeSection === item.id
-                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
+                    ? 'glass-strong text-gradient-accent'
+                    : 'text-white/60 hover:text-white hover:bg-white/10'
                 }`}
                 title={`Navigate to ${item.label} section`}
                 aria-label={`Navigate to ${item.label} section`}
@@ -213,7 +213,7 @@ export default function PortfolioNavigation() {
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ${
+        className={`fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 p-3 glass-strong text-white rounded-full shadow-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all duration-300 hover:scale-110 active:scale-95 glow-blue hover:glow-purple ${
           isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         }`}
         title="Scroll to top of page"

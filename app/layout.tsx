@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Noto_Sans_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { getPortfolioData } from "@/lib/data";
 import { generatePersonStructuredData, generateWebsiteStructuredData } from "@/lib/seo";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
 
-const googleSansCode = Noto_Sans_Mono({
-  variable: "--font-google-sans-code",
+const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -127,7 +126,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${googleSansCode.variable} font-mono antialiased`}
+        className={`${inter.className} antialiased`}
       >
         <a
           href="#main-content"

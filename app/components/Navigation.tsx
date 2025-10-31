@@ -41,11 +41,12 @@ export default function Navigation({
         }`}
         aria-label="Main navigation"
       >
-        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-full shadow-lg border border-slate-200/50 dark:border-slate-700/50 px-4 sm:px-6 py-2 sm:py-3">
-          <div className="flex items-center gap-2 sm:gap-4">
+        <div className="glass rounded-full shadow-lg px-6 py-3 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full" />
+          <div className="flex items-center gap-4 relative z-10">
             <Link 
               href="/"
-              className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+              className="flex items-center gap-2 text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
               aria-label="Return to homepage"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -54,12 +55,12 @@ export default function Navigation({
               <span className="text-sm font-medium">Home</span>
             </Link>
             
-            <div className="w-px h-6 bg-slate-300 dark:bg-slate-600" />
+            <div className="w-px h-6 bg-white/20" />
             
             {!isPortfolioPage && (
               <Link 
                 href="/portfolio"
-                className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+                className="flex items-center gap-2 text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
                 aria-label="Navigate to portfolio page"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -72,7 +73,7 @@ export default function Navigation({
             {!isChatPage && (
               <Link 
                 href="/chat"
-                className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+                className="flex items-center gap-2 text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
                 aria-label="Navigate to AI chat interface"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -93,14 +94,14 @@ export default function Navigation({
       <div className="flex items-center gap-3">
         <Link 
           href="/"
-          className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+          className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
           aria-label="Return to homepage"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          <span className="hidden sm:inline">Back to Home</span>
-          <span className="sm:hidden">Home</span>
+          <span className="hidden sm:inline text-sm">Back to Home</span>
+          <span className="sm:hidden text-sm">Home</span>
         </Link>
         
         {showModeToggle && (
@@ -108,7 +109,7 @@ export default function Navigation({
             {!isPortfolioPage && (
               <Link 
                 href="/portfolio"
-                className="text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+                className="text-sm text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
                 aria-label="Navigate to portfolio page"
               >
                 View Portfolio
@@ -118,7 +119,7 @@ export default function Navigation({
             {!isChatPage && (
               <Link 
                 href="/chat"
-                className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+                className="text-sm text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
                 aria-label="Navigate to AI chat interface"
               >
                 Chat with AI
@@ -132,23 +133,24 @@ export default function Navigation({
 
   // Default header navigation
   return (
-    <nav className="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700" role="navigation" aria-label="Main navigation">
-      <div className="container mx-auto px-4 sm:px-6 py-4">
+    <nav className="glass border-b border-white/10 relative overflow-hidden" role="navigation" aria-label="Main navigation">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5 opacity-50" />
+      <div className="container mx-auto px-4 sm:px-6 py-4 relative z-10">
         <div className="flex items-center justify-between">
           {/* Logo/Brand */}
           <Link 
             href="/"
-            className="flex items-center gap-3 text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md px-2 py-1"
+            className="flex items-center gap-3 text-white hover:text-white/80 transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1 group"
             aria-label={`${portfolioData.profile.name} - Return to homepage`}
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 glass-strong rounded-lg flex items-center justify-center glow-blue group-hover:glow-purple transition-all">
               <span className="text-white font-bold text-sm">
                 {portfolioData.profile.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
               </span>
             </div>
             <div className="hidden sm:block">
-              <div className="font-semibold">{portfolioData.profile.name}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400">{portfolioData.profile.title}</div>
+              <div className="font-semibold text-white">{portfolioData.profile.name}</div>
+              <div className="text-xs text-gradient-accent">{portfolioData.profile.title}</div>
             </div>
           </Link>
 
@@ -156,10 +158,10 @@ export default function Navigation({
           <div className="flex items-center gap-6">
             <Link 
               href="/portfolio"
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 ${
                 isPortfolioPage
-                  ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400'
+                  ? 'text-white bg-white/10'
+                  : 'text-white/60 hover:text-white'
               }`}
               aria-label="Navigate to portfolio page"
               aria-current={isPortfolioPage ? 'page' : undefined}
@@ -172,10 +174,10 @@ export default function Navigation({
             
             <Link 
               href="/chat"
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 ${
                 isChatPage
-                  ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400'
+                  ? 'text-white bg-white/10'
+                  : 'text-white/60 hover:text-white'
               }`}
               aria-label="Navigate to AI chat interface"
               aria-current={isChatPage ? 'page' : undefined}
@@ -189,7 +191,7 @@ export default function Navigation({
             {/* Contact */}
             <a 
               href={`mailto:${portfolioData.profile.email}`}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 rounded-md"
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white/60 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md"
               aria-label={`Send email to ${portfolioData.profile.email}`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -15,7 +15,7 @@ export default function ChatMessage({ message, isUser, timestamp, isStreaming = 
   
   return (
     <div 
-      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-message-slide-in`}
       role="group"
       aria-labelledby={messageId}
     >
@@ -24,10 +24,11 @@ export default function ChatMessage({ message, isUser, timestamp, isStreaming = 
           className={`
             px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-sm
             ${isUser 
-              ? 'bg-blue-500 text-white rounded-br-md' 
-              : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-md'
+              ? 'glass-strong text-white rounded-br-md bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30' 
+              : 'glass text-white rounded-bl-md bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-500/30'
             }
             ${isStreaming ? 'animate-pulse' : ''}
+            transition-all duration-200
           `}
           role={isUser ? "log" : "log"}
           aria-live={isStreaming ? "polite" : "off"}
@@ -50,7 +51,7 @@ export default function ChatMessage({ message, isUser, timestamp, isStreaming = 
           </p>
         </div>
         <div 
-          className={`text-xs text-slate-500 dark:text-slate-400 mt-1 px-1 ${isUser ? 'text-right' : 'text-left'}`}
+          className={`text-xs text-white/40 mt-1 px-1 ${isUser ? 'text-right' : 'text-left'}`}
           aria-label={`Message sent ${formatDistanceToNow(timestamp, { addSuffix: true })}`}
         >
           {formatDistanceToNow(timestamp, { addSuffix: true })}

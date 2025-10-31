@@ -48,11 +48,9 @@ export async function GET() {
         },
         chat: {
           status: envValidation.chatEnabled ? 'enabled' : 'disabled',
-          configured: !!envConfig.llmApiKey,
-          model: envConfig.llmModel,
-          provider: envConfig.llmBaseUrl.includes('openai.com') ? 'openai' : 
-                   envConfig.llmBaseUrl.includes('anthropic.com') ? 'anthropic' :
-                   envConfig.llmBaseUrl.includes('localhost') ? 'local' : 'custom'
+          configured: !!envConfig.geminiApiKey,
+          model: envConfig.geminiModel,
+          provider: 'gemini'
         }
       },
       configuration: {
