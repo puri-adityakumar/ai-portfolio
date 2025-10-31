@@ -5,11 +5,11 @@ import { getPortfolioData } from '@/lib/data';
 export async function GET() {
   try {
     const startTime = Date.now();
-    
+
     // Check environment configuration
     const envValidation = validateEnvironment();
     const envConfig = getEnvironmentConfig();
-    
+
     // Check if portfolio data can be loaded
     let portfolioDataStatus = 'ok';
     let portfolioError = null;
@@ -23,10 +23,10 @@ export async function GET() {
       portfolioDataStatus = 'error';
       portfolioError = error instanceof Error ? error.message : 'Unknown error';
     }
-    
+
     // Calculate response time
     const responseTime = Date.now() - startTime;
-    
+
     // Determine overall health status
     let status = 'healthy';
     if (!envValidation.isValid || portfolioDataStatus === 'error') {
@@ -34,8 +34,32 @@ export async function GET() {
     } else if (!envValidation.chatEnabled || portfolioDataStatus === 'warning') {
       status = 'degraded';
     }
-    
-    const healthData = {
+
+    const healthData: {
+      status: string;
+      timestamp: string;
+      version: string;
+      environment: 'development' | 'production' | 'test';
+      responseTime: string;
+      services: {
+        portfolio: {
+          status: string;
+          error: string | null;
+        };
+        chat: {
+          status: string;
+          configured: boolean;
+          model: string;
+          provider: string;
+        };
+      };
+      configuration: {
+        siteUrl: string;
+        debug: boolean;
+      };
+      warnings?: string[];
+      errors?: string[];
+    } = {
       status,
       timestamp: new Date().toISOString(),
       version: process.env.npm_package_version || '1.0.0',
@@ -58,29 +82,29 @@ export async function GET() {
         debug: envConfig.debug
       }
     };
-    
+
     // Add warnings if any
     if (envValidation.warnings.length > 0) {
       healthData.warnings = envValidation.warnings;
     }
-    
+
     // Add errors if any
     if (envValidation.errors.length > 0) {
       healthData.errors = envValidation.errors;
     }
-    
+
     // Return appropriate HTTP status code
-    const httpStatus = status === 'healthy' ? 200 : 
-                      status === 'degraded' ? 200 : 503;
-    
-    return NextResponse.json(healthData, { 
+    const httpStatus = status === 'healthy' ? 200 :
+      status === 'degraded' ? 200 : 503;
+
+    return NextResponse.json(healthData, {
       status: httpStatus,
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Content-Type': 'application/json'
       }
     });
-    
+
   } catch (error) {
     return NextResponse.json({
       status: 'unhealthy',
@@ -90,7 +114,7 @@ export async function GET() {
         portfolio: { status: 'unknown' },
         chat: { status: 'unknown' }
       }
-    }, { 
+    }, {
       status: 503,
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',

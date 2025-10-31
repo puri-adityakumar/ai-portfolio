@@ -2,7 +2,7 @@
  * Graceful degradation utilities for handling missing or invalid data
  */
 
-import { PortfolioData } from '@/types/portfolio';
+import { PortfolioData, ExperienceItem, ProjectItem, Achievement, EducationItem } from '@/types/portfolio';
 
 /**
  * Default fallback values for portfolio data
@@ -60,10 +60,10 @@ export function validatePortfolioData(data: any): PortfolioData {
       devops: Array.isArray(data.skills?.devops) ? data.skills.devops : DEFAULT_PORTFOLIO_DATA.skills!.devops,
       tools: Array.isArray(data.skills?.tools) ? data.skills.tools : DEFAULT_PORTFOLIO_DATA.skills!.tools
     },
-    experiences: Array.isArray(data.experiences) ? data.experiences.filter(exp => exp && exp.role && exp.company) : [],
-    projects: Array.isArray(data.projects) ? data.projects.filter(proj => proj && proj.name && proj.description) : [],
-    achievements: Array.isArray(data.achievements) ? data.achievements.filter(ach => ach && ach.title) : [],
-    education: Array.isArray(data.education) ? data.education.filter(edu => edu && edu.institution && edu.degree) : []
+    experiences: Array.isArray(data.experiences) ? data.experiences.filter((exp: any): exp is ExperienceItem => exp && exp.role && exp.company) : [],
+    projects: Array.isArray(data.projects) ? data.projects.filter((proj: any): proj is ProjectItem => proj && proj.name && proj.description) : [],
+    achievements: Array.isArray(data.achievements) ? data.achievements.filter((ach: any): ach is Achievement => ach && ach.title) : [],
+    education: Array.isArray(data.education) ? data.education.filter((edu: any): edu is EducationItem => edu && edu.institution && edu.degree) : []
   };
 
   return validated;
@@ -76,14 +76,14 @@ export function safeGet<T>(obj: any, path: string, fallback: T): T {
   try {
     const keys = path.split('.');
     let current = obj;
-    
+
     for (const key of keys) {
       if (current == null || typeof current !== 'object') {
         return fallback;
       }
       current = current[key];
     }
-    
+
     return current !== undefined ? current : fallback;
   } catch {
     return fallback;
@@ -170,13 +170,13 @@ export async function safeDataLoad<T>(
       undefined,
       error instanceof Error ? error : new Error(String(error))
     );
-    
+
     if (errorHandler) {
       errorHandler(dataError);
     } else {
       console.warn('Data loading failed, using fallback:', dataError.message);
     }
-    
+
     return fallback;
   }
 }
@@ -196,14 +196,14 @@ export function createDegradedPortfolio(partialData?: Partial<PortfolioData>): P
  */
 export function getDegradationMessage(missingData: string[]): string | null {
   if (missingData.length === 0) return null;
-  
+
   if (missingData.length === 1) {
     return `${missingData[0]} information is currently unavailable.`;
   }
-  
+
   if (missingData.length <= 3) {
     return `${missingData.join(', ')} information is currently unavailable.`;
   }
-  
+
   return 'Some portfolio information is currently unavailable. Please try refreshing the page.';
 }

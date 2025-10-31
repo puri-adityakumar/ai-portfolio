@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { GeistSans } from 'geist/font/sans';
 import "./globals.css";
 import { getPortfolioData } from "@/lib/data";
+import { type PortfolioData } from "@/types/portfolio";
 import { generatePersonStructuredData, generateWebsiteStructuredData } from "@/lib/seo";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
 
 // Load portfolio data with error handling
-let portfolioData;
+let portfolioData: PortfolioData;
 try {
   portfolioData = getPortfolioData();
 } catch (error) {

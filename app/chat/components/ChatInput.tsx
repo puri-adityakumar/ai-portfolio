@@ -11,9 +11,9 @@ interface ChatInputProps {
   onRetry?: () => void;
 }
 
-export default function ChatInput({ 
-  onSendMessage, 
-  disabled = false, 
+export default function ChatInput({
+  onSendMessage,
+  disabled = false,
   placeholder = "Type your message...",
   isLoading = false,
   onStop,
@@ -78,7 +78,6 @@ export default function ChatInput({
           </div>
           <button
             type="submit"
-            aria-label="Send message"
             onClick={handleSend}
             disabled={disabled || !message.trim()}
             className="
